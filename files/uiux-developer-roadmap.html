@@ -1,0 +1,2733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI/UX Developer Roadmap — Beginner to Advanced</title>
+<link rel="icon" type="image/png" href="cg.png">
+<link rel="apple-touch-icon" href="cg.png">
+<meta name="description" content="Complete UI/UX Developer roadmap covering UI design, UX research, Figma, design systems, HTML, CSS, JavaScript, React, accessibility, performance, product design, projects, and career preparation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+@keyframes floaty{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-3%,4%) scale(1.06); } }
+@keyframes floaty2{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(4%,-5%) scale(1.08); } }
+@keyframes marqueeScroll{ 0%{ transform:translateX(0); } 100%{ transform:translateX(-50%); } }
+/* ============================= DESIGN TOKENS ============================= */
+:root{
+  --ink:#12151c;
+  --paper:#faf8f3;
+  --transit:#3b5bdb;
+  --transit-dim:#2a3f9e;
+  --beacon:#e8a33d;
+  --teal:#2bb3a3;
+  --violet:#8b5fbf;
+  --rose:#e2574c;
+  --green:#4c9f70;
+
+  --bg:var(--paper);
+  --surface:#ffffff;
+  --surface-2:#f1efe8;
+  --text:#1b1f2a;
+  --text-muted:#5c6273;
+  --border:rgba(27,31,42,0.12);
+  --border-strong:rgba(27,31,42,0.22);
+  --shadow:0 1px 2px rgba(18,21,28,0.04), 0 8px 24px rgba(18,21,28,0.06);
+  --shadow-lg:0 12px 40px rgba(18,21,28,0.14);
+
+  --font-display:'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-body:'Inter', system-ui, sans-serif;
+  --font-mono:'JetBrains Mono', ui-monospace, monospace;
+
+  --radius-sm:6px;
+  --radius-md:10px;
+  --radius-lg:16px;
+  --max-w:1180px;
+  --dur:180ms;
+  --mx:50%; --my:50%;
+}
+[data-theme="dark"]{
+  --bg:var(--ink);
+  --surface:#191d27;
+  --surface-2:#20242f;
+  --text:#e9e7e1;
+  --text-muted:#9096a8;
+  --border:rgba(233,231,225,0.10);
+  --border-strong:rgba(233,231,225,0.20);
+  --shadow:0 1px 2px rgba(0,0,0,0.3), 0 12px 32px rgba(0,0,0,0.35);
+  --shadow-lg:0 16px 48px rgba(0,0,0,0.5);
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  transition:background var(--dur) ease, color var(--dur) ease;
+  overflow-x:hidden;
+}
+img,svg{display:block; max-width:100%;}
+a{color:inherit;}
+button{font-family:inherit; cursor:pointer;}
+h1,h2,h3,h4{font-family:var(--font-display); margin:0; letter-spacing:-0.01em; line-height:1.15;}
+p{margin:0;}
+:focus-visible{outline:2px solid var(--transit); outline-offset:2px; border-radius:4px;}
+.container{max-width:var(--max-w); margin:0 auto; padding:0 24px;}
+.mono{font-family:var(--font-mono);}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;}
+.section{padding:88px 0; position:relative;}
+.section-tight{padding:56px 0; position:relative;}
+.section-head{max-width:640px; margin-bottom:44px;}
+.section-head h2{font-size:clamp(26px,3.4vw,38px); margin-bottom:12px;}
+.section-head p{color:var(--text-muted); font-size:17px;}
+
+/* ============================= MOTION SYSTEM ============================= */
+.reveal{opacity:0; transform:translateY(26px); transition:opacity 640ms cubic-bezier(.16,1,.3,1), transform 640ms cubic-bezier(.16,1,.3,1);}
+.reveal.in-view{opacity:1; transform:translateY(0);}
+.reveal-left{opacity:0; transform:translateX(-30px); transition:opacity 620ms cubic-bezier(.16,1,.3,1), transform 620ms cubic-bezier(.16,1,.3,1);}
+.reveal-left.in-view{opacity:1; transform:translateX(0);}
+.reveal-right{opacity:0; transform:translateX(30px); transition:opacity 620ms cubic-bezier(.16,1,.3,1), transform 620ms cubic-bezier(.16,1,.3,1);}
+.reveal-right.in-view{opacity:1; transform:translateX(0);}
+.reveal-scale{opacity:0; transform:scale(.9); transition:opacity 520ms cubic-bezier(.16,1,.3,1), transform 520ms cubic-bezier(.16,1,.3,1);}
+.reveal-scale.in-view{opacity:1; transform:scale(1);}
+
+.tilting{transition:box-shadow 220ms ease, border-color 220ms ease !important;}
+
+.btn{
+  position:relative; overflow:hidden;
+  display:inline-flex; align-items:center; gap:8px; padding:12px 22px;
+  border-radius:999px; font-weight:600; font-size:15px; border:1px solid transparent;
+  transition:transform 220ms cubic-bezier(.34,1.56,.64,1), background var(--dur) ease, border-color var(--dur) ease, box-shadow 220ms ease;
+  white-space:nowrap;
+}
+.btn:hover{transform:translateY(-2px);}
+.btn:active{transform:scale(0.96) translateY(0);}
+.btn-primary{background:var(--transit); color:#fff; box-shadow:0 6px 18px rgba(59,91,219,0.28);}
+.btn-primary:hover{background:var(--transit-dim); box-shadow:0 10px 26px rgba(59,91,219,0.4);}
+.btn-ghost{background:transparent; border-color:var(--border-strong); color:var(--text);}
+.btn-ghost:hover{background:var(--surface-2);}
+.ripple{position:absolute; border-radius:50%; background:rgba(255,255,255,0.55); transform:scale(0); animation:rippleAnim 620ms ease-out forwards; pointer-events:none;}
+[data-theme="dark"] .btn-ghost .ripple{background:rgba(255,255,255,0.18);}
+@keyframes rippleAnim{ to{ transform:scale(2.6); opacity:0; } }
+
+.pill{
+  display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px;
+  font-size:12.5px; font-weight:600; font-family:var(--font-mono); border:1px solid var(--border-strong);
+}
+.card{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
+  box-shadow:var(--shadow); transition:box-shadow 260ms ease, border-color 260ms ease, transform 260ms cubic-bezier(.16,1,.3,1);
+}
+.card:hover{box-shadow:var(--shadow-lg);}
+
+/* ============================= NAVBAR ============================= */
+header.nav{
+  position:sticky; top:0; z-index:100; background:color-mix(in srgb, var(--bg) 96%, transparent);
+  border-bottom:1px solid var(--border);
+  transition:background var(--dur) ease;
+}
+.nav-inner{display:flex; align-items:center; justify-content:space-between; padding:14px 24px; max-width:var(--max-w); margin:0 auto; gap:16px;}
+.nav-brand{display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:700; font-size:16.5px;}
+.nav-brand .mark{width:32px; height:32px; object-fit:contain; flex-shrink:0; display:block;}
+.nav-links{display:flex; gap:4px; list-style:none; margin:0; padding:0;}
+.nav-links a{position:relative; padding:8px 12px; border-radius:8px; font-size:14.5px; font-weight:500; color:var(--text-muted); transition:color var(--dur), background var(--dur);}
+.nav-links a::after{content:""; position:absolute; left:12px; right:12px; bottom:3px; height:2px; background:var(--transit); border-radius:2px; transform:scaleX(0); transform-origin:left; transition:transform 220ms ease;}
+.nav-links a:hover{color:var(--text); background:var(--surface-2);}
+.nav-links a:hover::after{transform:scaleX(1);}
+.nav-actions{display:flex; align-items:center; gap:8px;}
+.icon-btn{
+  width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+  border-radius:10px; border:1px solid var(--border-strong); background:var(--surface); color:var(--text);
+  transition:background var(--dur), transform 220ms cubic-bezier(.34,1.56,.64,1);
+}
+.icon-btn:hover{background:var(--surface-2); transform:translateY(-2px);}
+.nav-progress-chip{
+  display:flex; align-items:center; gap:8px; padding:6px 12px 6px 6px; border-radius:999px;
+  border:1px solid var(--border-strong); background:var(--surface); font-size:13px; font-weight:600;
+}
+.ring{width:26px; height:26px;}
+#navRingFill{transition:stroke-dashoffset 500ms cubic-bezier(.16,1,.3,1);}
+.hamburger{display:none;}
+.mobile-panel{display:grid; grid-template-rows:0fr; transition:grid-template-rows 300ms ease;}
+.mobile-panel > div{overflow:hidden;}
+.mobile-panel.open{grid-template-rows:1fr;}
+@media (max-width: 920px){
+  .nav-links{display:none;}
+  .nav-progress-chip span.chip-label{display:none;}
+  .hamburger{display:flex;}
+  .mobile-panel > div{padding:12px 24px 20px; border-top:1px solid var(--border);}
+  .mobile-panel a{display:block; padding:10px 4px; font-size:15px; font-weight:500; color:var(--text); border-bottom:1px solid var(--border);}
+}
+
+/* ============================= HERO ============================= */
+.hero{padding:76px 0 40px; position:relative; overflow:hidden; isolation:isolate;}
+.hero-bg{position:absolute; inset:0; z-index:-2; overflow:hidden;}
+.blob{position:absolute; border-radius:50%; opacity:.28; pointer-events:none;}
+.blob-1{width:460px; height:460px; background:radial-gradient(circle, var(--transit), transparent 68%); top:-140px; left:-100px; animation:floaty 10s ease-in-out infinite;}
+.blob-2{width:400px; height:400px; background:radial-gradient(circle, var(--beacon), transparent 68%); bottom:-140px; right:-80px; animation:floaty2 13s ease-in-out infinite;}
+.blob-3{width:320px; height:320px; background:radial-gradient(circle, var(--teal), transparent 68%); top:30%; right:20%; animation:floaty 15s ease-in-out infinite reverse; opacity:.18;}
+.hero-spotlight{position:absolute; inset:0; z-index:-1; pointer-events:none; background:radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--transit) 14%, transparent), transparent 70%);}
+.hero-grid{display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px; align-items:center;}
+.hero h1{font-size:clamp(38px,5.4vw,64px); font-weight:700;}
+.hero h1 .word{display:inline-block; opacity:0; transform:translateY(24px); animation:wordIn 700ms cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes wordIn{ to{opacity:1; transform:translateY(0);} }
+.hero .tagline{font-family:var(--font-mono); color:var(--transit); font-size:14px; font-weight:600; margin-bottom:14px; display:inline-block; opacity:0; animation:wordIn 600ms cubic-bezier(.16,1,.3,1) forwards;}
+.hero p.sub{margin-top:18px; font-size:18px; color:var(--text-muted); max-width:520px; opacity:0; animation:wordIn 700ms cubic-bezier(.16,1,.3,1) forwards; animation-delay:.55s;}
+.hero-ctas{display:flex; gap:12px; margin-top:30px; flex-wrap:wrap; opacity:0; animation:wordIn 700ms cubic-bezier(.16,1,.3,1) forwards; animation-delay:.7s;}
+.hero-stats{display:flex; gap:28px; margin-top:44px; flex-wrap:wrap; opacity:0; animation:wordIn 700ms cubic-bezier(.16,1,.3,1) forwards; animation-delay:.85s;}
+.hero-stats .stat b{display:block; font-family:var(--font-display); font-size:26px;}
+.hero-stats .stat span{font-size:13px; color:var(--text-muted);}
+.route-art{
+  border:1px solid var(--border); border-radius:var(--radius-lg); background:var(--surface);
+  padding:26px; box-shadow:var(--shadow-lg);
+  opacity:0; transform:scale(.92) translateY(10px); animation:wordIn 800ms cubic-bezier(.16,1,.3,1) forwards; animation-delay:.4s;
+}
+.route-art svg{width:100%; height:auto;}
+.route-art .rline{stroke-dasharray:320; stroke-dashoffset:320; animation:drawLine 1.6s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes drawLine{ to{ stroke-dashoffset:0; } }
+.route-art .rdot{opacity:0; animation:dotIn 400ms ease forwards;}
+@keyframes dotIn{ to{opacity:1;} }
+.route-art .rtrain{ offset-path:path("M60,30 L60,305"); animation:trainMove 4.5s linear infinite; }
+@keyframes trainMove{ 0%{ offset-distance:0%; opacity:0; } 5%{opacity:1;} 95%{opacity:1;} 100%{ offset-distance:100%; opacity:0; } }
+@media (max-width: 900px){
+  .hero-grid{grid-template-columns:1fr; gap:36px;}
+}
+
+/* ============================= STAT BAR ============================= */
+.statbar{border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:var(--surface-2);}
+.statbar .container{display:grid; grid-template-columns:repeat(4,1fr); gap:0; padding:0;}
+.statbar .item{padding:26px 24px; text-align:center; border-right:1px solid var(--border);}
+.statbar .item:last-child{border-right:none;}
+.statbar .item b{display:block; font-family:var(--font-display); font-size:24px;}
+.statbar .item span{font-size:13px; color:var(--text-muted);}
+@media (max-width:700px){ .statbar .container{grid-template-columns:1fr 1fr;} .statbar .item{border-bottom:1px solid var(--border);} }
+
+/* ============================= INTRO / WHO ============================= */
+.audience-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
+.audience-card{padding:22px;}
+.audience-card:hover{transform:translateY(-4px);}
+.audience-card h4{font-size:16px; margin-bottom:8px;}
+.audience-card p{font-size:14px; color:var(--text-muted);}
+.audience-card .tag{font-family:var(--font-mono); font-size:11.5px; color:var(--transit); font-weight:600; margin-bottom:10px; display:block;}
+@media (max-width:900px){ .audience-grid{grid-template-columns:1fr 1fr;} }
+@media (max-width:560px){ .audience-grid{grid-template-columns:1fr;} }
+
+/* ============================= DASHBOARD ============================= */
+.dash-grid{display:grid; grid-template-columns:1.1fr 1fr; gap:20px;}
+.dash-card{padding:26px;}
+.dash-main{display:flex; align-items:center; gap:26px; flex-wrap:wrap;}
+.progress-ring-wrap{position:relative; width:118px; height:118px; flex-shrink:0;}
+.progress-ring-wrap svg{width:100%; height:100%; transform:rotate(-90deg);}
+#dashRing{transition:stroke-dashoffset 900ms cubic-bezier(.16,1,.3,1);}
+.progress-ring-wrap.pulse #dashRing{filter:drop-shadow(0 0 8px var(--transit));}
+.progress-ring-wrap .pct{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:24px; font-weight:700;}
+.dash-meta div{margin-bottom:8px; font-size:14px;}
+.dash-meta b{font-weight:600;}
+.cat-bars{display:flex; flex-direction:column; gap:12px;}
+.cat-bar-row{display:flex; align-items:center; gap:12px;}
+.cat-bar-row .label{width:110px; font-size:13px; color:var(--text-muted); flex-shrink:0;}
+.cat-bar-track{flex:1; height:8px; background:var(--surface-2); border-radius:999px; overflow:hidden;}
+.cat-bar-fill{height:100%; border-radius:999px; transition:width 700ms cubic-bezier(.16,1,.3,1); position:relative;}
+.cat-bar-fill::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent); transform:translateX(-100%); animation:shimmerBar 2.2s ease-in-out infinite;}
+@keyframes shimmerBar{ 100%{ transform:translateX(100%); } }
+.cat-bar-row .val{width:38px; text-align:right; font-family:var(--font-mono); font-size:12.5px; color:var(--text-muted); flex-shrink:0;}
+.time-select{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;}
+.time-select button{position:relative; overflow:hidden; padding:8px 14px; border-radius:999px; border:1px solid var(--border-strong); background:var(--surface); font-size:13px; font-weight:600; transition:transform 180ms ease, background 180ms;}
+.time-select button:hover{transform:translateY(-2px);}
+.time-select button.active{background:var(--transit); color:#fff; border-color:var(--transit);}
+.time-result{margin-top:14px; font-size:14px; padding:12px 14px; background:var(--surface-2); border-radius:var(--radius-md); transition:background 200ms;}
+.time-result b{font-family:var(--font-display);}
+@media (max-width:860px){ .dash-grid{grid-template-columns:1fr;} }
+
+/* ============================= ROADMAP / TRANSIT MAP ============================= */
+.track-legend{display:flex; flex-wrap:wrap; gap:10px 18px; margin-bottom:36px;}
+.track-legend .leg{display:flex; align-items:center; gap:7px; font-size:13px; color:var(--text-muted);}
+.track-legend .dot{width:10px; height:10px; border-radius:50%; flex-shrink:0; box-shadow:0 0 0 4px color-mix(in srgb, currentColor 18%, transparent);}
+.route-line-wrap{position:relative; padding-left:34px;}
+.route-line-wrap::before{
+  content:""; position:absolute; left:14px; top:6px; bottom:6px; width:3px; background:var(--border-strong); border-radius:3px;
+}
+.route-line-fill{position:absolute; left:14px; top:6px; bottom:6px; width:3px; border-radius:3px;
+  background:linear-gradient(var(--transit), var(--teal) 35%, var(--beacon) 65%, var(--green));
+  transform-origin:top; transform:scaleY(0); will-change:transform;
+  box-shadow:0 0 10px color-mix(in srgb, var(--transit) 60%, transparent);}
+.route-track-group{margin-bottom:6px;}
+.route-track-label{font-family:var(--font-mono); font-size:12.5px; font-weight:600; color:var(--text-muted); margin:30px 0 14px; padding-left:2px;}
+.route-track-group:first-child .route-track-label{margin-top:0;}
+.station{
+  position:relative; padding:0 0 22px 24px; cursor:pointer;
+}
+.station::before{
+  content:""; position:absolute; left:-34px; top:2px; width:16px; height:16px; border-radius:50%;
+  background:var(--surface); border:3px solid var(--line-color, var(--transit)); z-index:2;
+  transition:transform 260ms cubic-bezier(.34,1.56,.64,1), box-shadow 260ms ease;
+}
+.station.done::before{ background:var(--line-color, var(--transit)); box-shadow:0 0 0 5px color-mix(in srgb, var(--line-color, var(--transit)) 20%, transparent); }
+.station:hover::before{ transform:scale(1.25); }
+.station-card{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:14px;
+  padding:16px 18px; border-radius:var(--radius-md); border:1px solid var(--border); background:var(--surface);
+  transition:border-color var(--dur), background var(--dur), transform 220ms cubic-bezier(.16,1,.3,1), box-shadow 220ms ease;
+}
+.station:hover .station-card{ border-color:var(--line-color, var(--border-strong)); box-shadow:var(--shadow-lg); transform:translateX(4px); }
+.station-num{font-family:var(--font-mono); font-size:12px; color:var(--text-muted); margin-bottom:3px;}
+.station-title{font-size:15.5px; font-weight:600;}
+.station-desc{font-size:13.5px; color:var(--text-muted); margin-top:4px; max-width:520px;}
+.station-right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
+.status-check{
+  width:24px; height:24px; border-radius:7px; border:2px solid var(--border-strong); display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:background var(--dur), border-color var(--dur), transform 260ms cubic-bezier(.34,1.56,.64,1);
+}
+.status-check.learning{border-color:var(--beacon); background:color-mix(in srgb, var(--beacon) 18%, transparent);}
+.status-check.completed{border-color:var(--green); background:var(--green); animation:checkPop 400ms cubic-bezier(.34,1.56,.64,1);}
+.status-check.completed::after{content:"✓"; color:#fff; font-size:14px; font-weight:700;}
+@keyframes checkPop{ 0%{transform:scale(.5);} 60%{transform:scale(1.2);} 100%{transform:scale(1);} }
+.diff-tag{font-size:11px; font-family:var(--font-mono); padding:3px 8px; border-radius:6px; background:var(--surface-2); color:var(--text-muted); white-space:nowrap;}
+
+/* ============================= FILTER PANEL ============================= */
+.filter-bar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:26px;}
+.filter-group{display:flex; gap:6px; flex-wrap:wrap;}
+.chip-filter{
+  padding:7px 13px; border-radius:999px; border:1px solid var(--border-strong); background:var(--surface);
+  font-size:13px; font-weight:500; color:var(--text-muted); transition:transform 180ms ease, background 180ms, color 180ms;
+}
+.chip-filter:hover{transform:translateY(-2px);}
+.chip-filter.active{background:var(--text); color:var(--bg); border-color:var(--text);}
+
+/* ============================= TECH STACK ============================= */
+.tech-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; perspective:900px;}
+.tech-card{
+  --tech-color:var(--tc, var(--transit));
+  position:relative; overflow:hidden; padding:18px; cursor:pointer;
+  transition:box-shadow 280ms ease, border-color 280ms ease, transform 240ms cubic-bezier(.16,1,.3,1);
+}
+[data-theme="dark"] .tech-card,
+[data-theme="dark"] .tech-modal-logo,
+[data-theme="dark"] .marquee-track .node{
+  --tech-color:var(--tc-dark, var(--tc, var(--transit)));
+}
+.tech-card::after{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0;
+  background:radial-gradient(240px circle at 22% 0%, color-mix(in srgb, var(--tech-color) 16%, transparent), transparent 72%);
+  transition:opacity 240ms ease;
+}
+.tech-card:hover{
+  transform:translateY(-4px);
+  transition-delay:0ms !important;
+  border-color:color-mix(in srgb, var(--tech-color) 48%, var(--border));
+  box-shadow:
+    0 6px 16px rgba(18,21,28,0.06),
+    0 16px 36px -6px color-mix(in srgb, var(--tech-color) 40%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--tech-color) 18%, transparent);
+}
+[data-theme="dark"] .tech-card:hover{
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.45),
+    0 18px 40px -6px color-mix(in srgb, var(--tech-color) 44%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--tech-color) 24%, transparent);
+}
+.tech-card:hover::after{opacity:1;}
+.tech-card-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; position:relative; z-index:1;}
+.tech-logo{
+  --tech-color:var(--tc, var(--transit));
+  width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; color:var(--tech-color);
+  background:color-mix(in srgb, var(--tech-color) 12%, var(--surface));
+  border:1px solid color-mix(in srgb, var(--tech-color) 24%, transparent);
+  box-shadow:0 6px 14px -3px color-mix(in srgb, var(--tech-color) 36%, transparent);
+  transition:transform 260ms cubic-bezier(.34,1.56,.64,1), box-shadow 260ms ease, background 260ms ease, border-color 260ms ease;
+}
+[data-theme="dark"] .tech-logo{
+  background:color-mix(in srgb, var(--tech-color) 16%, var(--surface-2));
+  border-color:color-mix(in srgb, var(--tech-color) 30%, transparent);
+  box-shadow:0 6px 16px -3px color-mix(in srgb, var(--tech-color) 40%, transparent);
+}
+.tech-logo svg{width:21px; height:21px; flex-shrink:0;}
+.tech-card:hover .tech-logo{
+  transform:scale(1.08) translateY(-1px);
+  border-color:color-mix(in srgb, var(--tech-color) 45%, transparent);
+  box-shadow:0 10px 22px -3px color-mix(in srgb, var(--tech-color) 55%, transparent);
+}
+.tech-modal-logo{width:46px; height:46px; border-radius:12px; margin-bottom:14px;}
+.tech-modal-logo svg{width:26px; height:26px;}
+.tech-name{font-size:15px; font-weight:600; margin-bottom:2px; position:relative; z-index:1;}
+.tech-cat{font-size:12px; color:var(--text-muted); position:relative; z-index:1;}
+.level-badge{font-size:10.5px; font-family:var(--font-mono); font-weight:600; padding:3px 8px; border-radius:6px;}
+.lvl-essential{background:color-mix(in srgb, var(--green) 18%, transparent); color:var(--green);}
+.lvl-recommended{background:color-mix(in srgb, var(--beacon) 20%, transparent); color:#a56a10;}
+[data-theme="dark"] .lvl-recommended{color:var(--beacon);}
+.lvl-advanced{background:color-mix(in srgb, var(--transit) 18%, transparent); color:var(--transit);}
+.lvl-optional{background:var(--surface-2); color:var(--text-muted);}
+
+.recommended-stack{padding:34px; position:relative; overflow:hidden;}
+.recommended-stack::before{content:""; position:absolute; top:-40%; right:-10%; width:280px; height:280px; background:radial-gradient(circle, color-mix(in srgb, var(--beacon) 22%, transparent), transparent 70%); pointer-events:none; animation:floaty 12s ease-in-out infinite;}
+.marquee-wrap{overflow:hidden; margin-top:18px; -webkit-mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);}
+.marquee-track{display:flex; gap:10px; width:max-content; animation:marqueeScroll 26s linear infinite; padding:6px 0;}
+.marquee-wrap:hover .marquee-track{animation-play-state:paused;}
+.marquee-track .node{
+  --tech-color:var(--tc, var(--transit));
+  display:inline-flex; align-items:center; gap:7px;
+  padding:8px 14px; border-radius:999px; background:var(--surface-2);
+  border:1px solid color-mix(in srgb, var(--tech-color) 22%, var(--border));
+  font-size:13.5px; font-weight:600; font-family:var(--font-mono); white-space:nowrap;
+  transition:transform 220ms cubic-bezier(.34,1.56,.64,1), box-shadow 220ms ease, border-color 220ms ease;
+}
+.marquee-track .node:hover{
+  transform:translateY(-2px);
+  border-color:color-mix(in srgb, var(--tech-color) 50%, transparent);
+  box-shadow:0 8px 18px -4px color-mix(in srgb, var(--tech-color) 42%, transparent);
+}
+.marquee-track .node svg{width:15px; height:15px; flex-shrink:0; color:var(--tech-color);}
+.marquee-track .arrow{color:var(--text-muted); font-size:14px; display:flex; align-items:center;}
+
+/* ============================= PROJECTS ============================= */
+.project-list{display:flex; flex-direction:column; gap:16px;}
+.project-row{
+  display:grid; grid-template-columns:64px 1fr auto; gap:18px; align-items:center;
+  padding:20px; cursor:pointer;
+}
+.project-row:hover{transform:translateX(6px);}
+.project-num{font-family:var(--font-display); font-size:26px; font-weight:700; color:var(--border-strong); transition:color 220ms;}
+.project-row:hover .project-num{color:var(--transit);}
+.project-title{font-size:16.5px; font-weight:600; margin-bottom:5px;}
+.project-skills{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
+.project-skills span{font-size:11.5px; padding:3px 8px; border-radius:6px; background:var(--surface-2); color:var(--text-muted);}
+.flagship{border-color:var(--beacon) !important;}
+.flagship-tag{font-size:11px; font-family:var(--font-mono); font-weight:700; color:#a56a10; background:color-mix(in srgb, var(--beacon) 22%, transparent); padding:4px 9px; border-radius:6px;}
+[data-theme="dark"] .flagship-tag{color:var(--beacon);}
+@media (max-width:640px){ .project-row{grid-template-columns:1fr; text-align:left;} .project-num{display:none;} }
+
+/* ============================= SKILLS MATRIX ============================= */
+.skills-cats{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
+.skill-cat-card{padding:20px;}
+.skill-cat-card:hover{transform:translateY(-4px);}
+.skill-cat-card h4{font-size:14.5px; margin-bottom:14px; display:flex; align-items:center; gap:8px;}
+.skill-cat-card h4 .dot{width:9px; height:9px; border-radius:50%;}
+.skill-row{display:flex; align-items:center; justify-content:space-between; padding:7px 0; font-size:13.5px; border-bottom:1px solid var(--border);}
+.skill-row:last-child{border-bottom:none;}
+.skill-level{font-size:11px; font-family:var(--font-mono); color:var(--text-muted);}
+@media (max-width:900px){ .skills-cats{grid-template-columns:1fr 1fr;} }
+@media (max-width:560px){ .skills-cats{grid-template-columns:1fr;} }
+
+/* ============================= CAREER ============================= */
+.career-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:40px;}
+.career-card{padding:18px;}
+.career-card:hover{transform:translateY(-4px);}
+.career-card h4{font-size:14.5px; margin-bottom:6px;}
+.career-card p{font-size:12.5px; color:var(--text-muted);}
+@media (max-width:900px){ .career-grid{grid-template-columns:1fr 1fr;} }
+@media (max-width:560px){ .career-grid{grid-template-columns:1fr;} }
+.compare-table{width:100%; border-collapse:collapse; font-size:13.5px;}
+.compare-table th, .compare-table td{text-align:left; padding:12px 14px; border-bottom:1px solid var(--border);}
+.compare-table th{font-family:var(--font-mono); font-weight:600; color:var(--text-muted); font-size:12px;}
+.compare-table td:first-child, .compare-table th:first-child{font-weight:600;}
+.compare-table tbody tr{transition:background 160ms;}
+.compare-table tbody tr:hover{background:var(--surface-2);}
+.table-wrap{overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius-lg); background:var(--surface);}
+.career-path-chain{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:40px;}
+.career-path-chain .node{padding:9px 15px; border-radius:999px; background:var(--surface); border:1px solid var(--border-strong); font-size:13px; font-weight:600; transition:transform 200ms;}
+.career-path-chain .node:hover{transform:translateY(-3px);}
+.career-path-chain .node.job{background:var(--green); color:#fff; border-color:var(--green);}
+
+/* ============================= FAQ ============================= */
+.faq-item{border-bottom:1px solid var(--border);}
+.faq-q{display:flex; align-items:center; justify-content:space-between; padding:18px 4px; font-size:15.5px; font-weight:600; width:100%; background:none; border:none; color:var(--text); text-align:left;}
+.faq-q .plus{font-size:20px; color:var(--text-muted); transition:transform 260ms cubic-bezier(.34,1.56,.64,1);}
+.faq-item.open .faq-q .plus{transform:rotate(45deg);}
+.faq-a{max-height:0; overflow:hidden; transition:max-height 320ms ease;}
+.faq-item.open .faq-a{max-height:220px;}
+.faq-a p{padding:0 4px 18px; font-size:14.5px; color:var(--text-muted); max-width:640px;}
+
+/* ============================= FOOTER ============================= */
+footer{border-top:1px solid var(--border); padding:48px 0 32px; margin-top:40px;}
+.footer-grid{display:flex; justify-content:space-between; flex-wrap:wrap; gap:30px;}
+.footer-links{display:flex; gap:22px; flex-wrap:wrap; list-style:none; padding:0; margin:0;}
+.footer-links a{font-size:13.5px; color:var(--text-muted); transition:color 160ms;}
+.footer-links a:hover{color:var(--text);}
+.footer-bottom{margin-top:30px; padding-top:20px; border-top:1px solid var(--border); font-size:13px; color:var(--text-muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+/* ============================= MODAL ============================= */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(10,12,16,0.55); z-index:200; display:none;
+  align-items:flex-start; justify-content:center; padding:5vh 16px; overflow-y:auto;
+  opacity:0; transition:opacity 220ms ease;
+}
+.modal-overlay.open{display:flex; opacity:1;}
+.modal{
+  background:var(--surface); border-radius:var(--radius-lg); max-width:620px; width:100%; padding:30px;
+  border:1px solid var(--border); box-shadow:var(--shadow-lg);
+  transform:scale(.94) translateY(14px); opacity:0; transition:transform 260ms cubic-bezier(.16,1,.3,1), opacity 260ms ease;
+}
+.modal-overlay.open .modal{transform:scale(1) translateY(0); opacity:1;}
+.modal-close{position:sticky; top:0; float:right; background:var(--surface-2); border:none; width:32px; height:32px; border-radius:8px; font-size:16px; color:var(--text-muted); transition:transform 180ms, background 180ms;}
+.modal-close:hover{transform:rotate(90deg); background:var(--rose); color:#fff;}
+.modal h3{font-size:22px; margin-bottom:6px;}
+.modal .modal-sub{font-size:13.5px; color:var(--text-muted); margin-bottom:18px;}
+.modal-block{margin-top:18px;}
+.modal-block h5{font-size:12.5px; font-family:var(--font-mono); color:var(--text-muted); margin-bottom:8px; font-weight:600;}
+.modal-block ul{margin:0; padding-left:18px; font-size:14px;}
+.modal-block ul li{margin-bottom:4px;}
+.modal-tags{display:flex; gap:6px; flex-wrap:wrap;}
+.modal-tags span{font-size:12px; padding:4px 10px; border-radius:6px; background:var(--surface-2); transition:background 160ms;}
+.modal-tags span:hover{background:color-mix(in srgb, var(--transit) 16%, var(--surface-2));}
+.modal-actions{display:flex; gap:10px; margin-top:24px; flex-wrap:wrap;}
+.status-btn{position:relative; overflow:hidden; padding:9px 15px; border-radius:8px; border:1px solid var(--border-strong); background:var(--surface); font-size:13px; font-weight:600; transition:transform 180ms;}
+.status-btn:hover{transform:translateY(-2px);}
+.status-btn.active-ns{background:var(--surface-2);}
+.status-btn.active-learning{background:color-mix(in srgb, var(--beacon) 20%, transparent); border-color:var(--beacon);}
+.status-btn.active-done{background:var(--green); border-color:var(--green); color:#fff;}
+.modal-link{font-size:13.5px; color:var(--transit); font-weight:600; display:inline-flex; gap:5px; align-items:center;}
+
+/* search modal */
+.search-modal .modal{max-width:560px;}
+.search-input{width:100%; padding:13px 14px; border-radius:10px; border:1px solid var(--border-strong); background:var(--surface-2); font-size:15px; color:var(--text); margin-bottom:14px; transition:border-color 180ms;}
+.search-input:focus{border-color:var(--transit);}
+.search-results{display:flex; flex-direction:column; gap:2px; max-height:52vh; overflow-y:auto;}
+.search-result{display:flex; justify-content:space-between; align-items:center; padding:11px 10px; border-radius:8px; font-size:14px; transition:background 140ms, transform 140ms;}
+.search-result:hover{background:var(--surface-2); transform:translateX(3px);}
+.search-result .r-type{font-size:11px; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase;}
+.search-empty{padding:20px 10px; font-size:14px; color:var(--text-muted);}
+
+/* ============================= CONFETTI + THEME WASH ============================= */
+.confetti-piece{position:fixed; width:7px; height:7px; border-radius:2px; pointer-events:none; z-index:400; will-change:transform, opacity;}
+.theme-wash{position:fixed; border-radius:50%; pointer-events:none; z-index:300; transform:scale(0); background:var(--bg); opacity:.9;}
+.theme-wash.animate{animation:washOut 520ms ease-out forwards;}
+@keyframes washOut{ to{ transform:scale(1); opacity:0; } }
+
+/* ============================= ACCOUNT / AUTH / PROFILE ============================= */
+.avatar-chip{display:flex; align-items:center; gap:8px; padding:5px 12px 5px 5px; border-radius:999px; border:1px solid var(--border-strong); background:var(--surface); font-size:13px; font-weight:600; transition:transform 200ms, box-shadow 200ms;}
+.avatar-chip:hover{transform:translateY(-2px); box-shadow:var(--shadow);}
+.avatar-circle{width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-display); font-weight:700; font-size:12px; flex-shrink:0; box-shadow:0 3px 8px rgba(0,0,0,0.2);}
+.avatar-circle.lg{width:64px; height:64px; font-size:22px;}
+.auth-tabs{display:flex; gap:6px; background:var(--surface-2); padding:4px; border-radius:10px; margin-bottom:20px;}
+.auth-tab{flex:1; padding:9px; border-radius:8px; border:none; background:transparent; font-size:13.5px; font-weight:600; color:var(--text-muted); transition:background 180ms, color 180ms;}
+.auth-tab.active{background:var(--surface); color:var(--text); box-shadow:var(--shadow);}
+.field{margin-bottom:14px;}
+.field label{display:block; font-size:12.5px; font-weight:600; color:var(--text-muted); margin-bottom:6px;}
+.field input, .field select, .field textarea{width:100%; padding:11px 12px; border-radius:8px; border:1px solid var(--border-strong); background:var(--surface-2); color:var(--text); font-size:14px; font-family:inherit; transition:border-color 160ms;}
+.field input:focus, .field select:focus, .field textarea:focus{border-color:var(--transit);}
+.field textarea{resize:vertical; min-height:70px;}
+.auth-note{font-size:12.5px; color:var(--text-muted); margin-bottom:18px;}
+.auth-error{font-size:13px; color:var(--rose); background:color-mix(in srgb, var(--rose) 12%, transparent); padding:9px 12px; border-radius:8px; margin-bottom:14px; display:none;}
+.auth-error.show{display:block;}
+.auth-switch{font-size:13px; color:var(--text-muted); margin-top:14px; text-align:center;}
+.auth-switch button{color:var(--transit); font-weight:600; background:none; border:none; padding:0;}
+.profile-modal .modal{max-width:680px;}
+.profile-header{display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+.profile-header .info{flex:1; min-width:160px;}
+.profile-header .info h3{margin-bottom:2px;}
+.profile-header .info .email{font-size:13px; color:var(--text-muted);}
+.profile-header .info .since{font-size:12px; color:var(--text-muted); margin-top:4px;}
+.profile-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:22px 0;}
+.profile-stat{padding:14px; border-radius:10px; background:var(--surface-2); text-align:center;}
+.profile-stat b{display:block; font-family:var(--font-display); font-size:20px;}
+.profile-stat span{font-size:11.5px; color:var(--text-muted);}
+.streak-badge{display:inline-flex; align-items:center; gap:5px; font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; background:color-mix(in srgb, var(--beacon) 18%, transparent); color:#a56a10; white-space:nowrap;}
+[data-theme="dark"] .streak-badge{color:var(--beacon);}
+.activity-list{display:flex; flex-direction:column; gap:2px; max-height:260px; overflow-y:auto; margin-top:8px;}
+.activity-row{display:flex; align-items:center; gap:10px; padding:9px 6px; border-radius:8px; font-size:13.5px; transition:background 140ms;}
+.activity-row:hover{background:var(--surface-2);}
+.activity-dot{width:8px; height:8px; border-radius:50%; flex-shrink:0;}
+.activity-row .a-label{flex:1;}
+.activity-row .a-date{font-size:11.5px; color:var(--text-muted); font-family:var(--font-mono); white-space:nowrap;}
+.profile-actions{display:flex; justify-content:flex-end; align-items:center; margin-top:22px; padding-top:18px; border-top:1px solid var(--border);}
+@media (max-width:560px){ .profile-stats{grid-template-columns:1fr 1fr;} }
+
+@media (max-width:640px){
+  .section{padding:56px 0;}
+  .dash-main{flex-direction:column; align-items:flex-start;}
+}
+
+/* ============================= BACK TO TOP ROCKET ============================= */
+.back-to-top{
+  position:fixed; right:24px; bottom:24px; z-index:90;
+  width:46px; height:46px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--surface); color:var(--transit);
+  border:1px solid var(--border-strong);
+  box-shadow:0 8px 24px rgba(18,21,28,0.12), 0 4px 12px color-mix(in srgb, var(--transit) 20%, transparent);
+  opacity:0; transform:translateY(14px) scale(0.92); pointer-events:none;
+  transition:opacity 220ms ease, transform 240ms cubic-bezier(.34,1.56,.64,1), background 180ms ease, border-color 180ms ease, box-shadow 220ms ease;
+}
+[data-theme="dark"] .back-to-top{
+  box-shadow:0 10px 26px rgba(0,0,0,0.45), 0 4px 14px color-mix(in srgb, var(--transit) 28%, transparent);
+}
+.back-to-top.visible{
+  opacity:1; transform:translateY(0) scale(1); pointer-events:auto;
+}
+.back-to-top:hover{
+  transform:translateY(-4px) scale(1.04);
+  background:var(--transit); color:#fff; border-color:var(--transit);
+  box-shadow:0 14px 30px -4px color-mix(in srgb, var(--transit) 55%, transparent);
+}
+.back-to-top:active{transform:translateY(-1px) scale(0.96);}
+.back-to-top svg{width:22px; height:22px; transition:transform 260ms cubic-bezier(.34,1.56,.64,1);}
+.back-to-top:hover svg{transform:translateY(-2px);}
+.back-to-top .rocket-flame{opacity:0.75; transform-origin:12px 19px; transition:opacity 180ms ease, transform 180ms ease;}
+.back-to-top:hover .rocket-flame{opacity:1; transform:scaleY(1.22); fill:var(--beacon);}
+.back-to-top.launching svg{animation:rocketLaunch 420ms cubic-bezier(.2,.8,.3,1);}
+@keyframes rocketLaunch{
+  0%{transform:translateY(0);}
+  45%{transform:translateY(-8px) scale(1.08);}
+  100%{transform:translateY(0);}
+}
+@media (max-width:640px){
+  .back-to-top{right:16px; bottom:16px; width:42px; height:42px; border-radius:12px;}
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="sr-only">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-brand" aria-label="UI/UX Developer Roadmap home">
+      <img src="cg.png" alt="" class="mark" aria-hidden="true">
+      UI/UX Developer Roadmap
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#techstack">Tech Stack</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#resources">Resources</a></li>
+        <li><a href="#career">Career</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="Search">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <div class="nav-progress-chip" id="navProgressChip" title="Overall progress">
+        <svg class="ring" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--surface-2)" stroke-width="4"/>
+          <circle id="navRingFill" cx="18" cy="18" r="15.5" fill="none" stroke="var(--transit)" stroke-width="4" stroke-dasharray="97.4" stroke-dashoffset="97.4" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+        </svg>
+        <span class="chip-label" id="navProgressLabel">0% complete</span>
+      </div>
+      <div id="accountArea"></div>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode">
+        <svg id="themeIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="icon-btn hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-panel" id="mobilePanel"><div>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#techstack">Tech Stack</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#resources">Resources</a>
+    <a href="#career">Career</a>
+    <div id="accountAreaMobile" style="margin-top:14px;"></div>
+  </div></div>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+    <div class="hero-spotlight" id="heroSpotlight" aria-hidden="true"></div>
+    <div class="container hero-grid">
+      <div>
+        <span class="tagline">FROM BEGINNER TO ADVANCED</span>
+        <h1 id="heroHeadline"></h1>
+        <p class="sub">A structured route through UI design, UX thinking, and frontend development — from your first wireframe to a product you can put in front of a hiring manager.</p>
+        <div class="hero-ctas">
+          <a href="#roadmap" class="btn btn-primary">Start the roadmap</a>
+          <a href="#techstack" class="btn btn-ghost">Explore tech stack</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><b data-count="34" id="statPhases">0</b><span>Learning phases</span></div>
+          <div class="stat"><b id="statSkills">0+</b><span>Skills covered</span></div>
+          <div class="stat"><b data-count="5" id="statProjects">0</b><span>Portfolio projects</span></div>
+          <div class="stat"><b>Beg → Adv</b><span>Difficulty range</span></div>
+        </div>
+      </div>
+      <div class="route-art" aria-hidden="true">
+        <svg viewBox="0 0 320 340">
+          <line class="rline" x1="60" y1="20" x2="60" y2="320" stroke="var(--border-strong)" stroke-width="3"/>
+          <circle class="rtrain" cx="0" cy="0" r="5" fill="var(--transit)"/>
+          <g font-family="JetBrains Mono, monospace" font-size="12" fill="var(--text-muted)">
+            <circle class="rdot" style="animation-delay:.2s" cx="60" cy="30" r="8" fill="var(--beacon)"/><text x="80" y="34">Design</text>
+            <circle class="rdot" style="animation-delay:.45s" cx="60" cy="85" r="8" fill="var(--teal)"/><text x="80" y="89">UX</text>
+            <circle class="rdot" style="animation-delay:.7s" cx="60" cy="140" r="8" fill="var(--transit)"/><text x="80" y="144">Frontend</text>
+            <circle class="rdot" style="animation-delay:.95s" cx="60" cy="195" r="8" fill="var(--violet)"/><text x="80" y="199">Design systems</text>
+            <circle class="rdot" style="animation-delay:1.2s" cx="60" cy="250" r="8" fill="var(--rose)"/><text x="80" y="254">Product</text>
+            <circle class="rdot" style="animation-delay:1.45s" cx="60" cy="305" r="8" fill="var(--green)"/><text x="80" y="309">Career</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <div class="statbar">
+    <div class="container">
+      <div class="item"><b data-count="34">0</b><span>Roadmap phases</span></div>
+      <div class="item"><b data-count="60" data-suffix="+">0</b><span>Technologies mapped</span></div>
+      <div class="item"><b data-count="5">0</b><span>Real-world projects</span></div>
+      <div class="item"><b data-count="6">0</b><span>Career paths compared</span></div>
+    </div>
+  </div>
+
+  <!-- WHAT IS A UI/UX DEVELOPER -->
+  <section class="section" id="about-role">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>What is a UI/UX Developer?</h2>
+        <p>Someone who designs interfaces, understands the people using them, and can build the real thing — sitting at the intersection of design and frontend engineering. This roadmap is built for four kinds of learner:</p>
+      </div>
+      <div class="audience-grid">
+        <div class="card audience-card tilt reveal-scale"><span class="tag">BEGINNER</span><h4>Starting from zero</h4><p>No design or code background yet. Begin at Phase 01 and move through in order.</p></div>
+        <div class="card audience-card tilt reveal-scale"><span class="tag">INTERMEDIATE</span><h4>Some Figma or code</h4><p>Comfortable with Figma, HTML/CSS, or basic JavaScript. Skip ahead to the phase that matches what you already know.</p></div>
+        <div class="card audience-card tilt reveal-scale"><span class="tag">ADVANCED</span><h4>Going professional</h4><p>Ready for design systems, accessibility, performance, and product thinking. Use this as a working reference.</p></div>
+        <div class="card audience-card tilt reveal-scale"><span class="tag">CAREER SWITCHER</span><h4>Changing tracks</h4><p>Coming from another field entirely. Follow the full path and lean on the Career section for interview prep.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section class="section-tight" id="dashboard">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Your learning dashboard</h2>
+        <p>Progress is saved in this browser. Mark phases, technologies, and projects as you go.</p>
+      </div>
+      <div class="dash-grid">
+        <div class="card dash-card reveal-left">
+          <div class="dash-main">
+            <div class="progress-ring-wrap" id="dashRingWrap">
+              <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="44" fill="none" stroke="var(--surface-2)" stroke-width="9"/>
+                <circle id="dashRing" cx="50" cy="50" r="44" fill="none" stroke="var(--transit)" stroke-width="9" stroke-linecap="round" stroke-dasharray="276.4" stroke-dashoffset="276.4"/>
+              </svg>
+              <div class="pct" id="dashPct">0%</div>
+            </div>
+            <div class="dash-meta">
+              <div>Current phase: <b id="dashCurrentPhase">01 — Understand the Role</b></div>
+              <div>Completed: <b id="dashCompletedCount">0 / 34 phases</b></div>
+              <div>Projects shipped: <b id="dashProjectsCount">0 / 5</b></div>
+              <div>Next up: <b id="dashNextPhase">—</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="card dash-card reveal-right">
+          <h4 style="font-size:14px; margin-bottom:16px;">Progress by track</h4>
+          <div class="cat-bars" id="catBars"></div>
+        </div>
+      </div>
+
+      <div class="card dash-card reveal" style="margin-top:20px;">
+        <h4 style="font-size:14px; margin-bottom:4px;">How much time can you give it?</h4>
+        <p style="font-size:13.5px; color:var(--text-muted);">Pick a daily commitment for a rough completion estimate.</p>
+        <div class="time-select" id="timeSelect">
+          <button data-hrs="1">1 hr/day</button>
+          <button data-hrs="2">2 hrs/day</button>
+          <button data-hrs="3" class="active">3 hrs/day</button>
+          <button data-hrs="4">4+ hrs/day</button>
+        </div>
+        <div class="time-result" id="timeResult"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="section" id="roadmap">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>The complete roadmap</h2>
+        <p>Six tracks, running like connected lines on a transit map. Click any station to see what it covers and mark it off as you go.</p>
+      </div>
+      <div class="track-legend" id="trackLegend"></div>
+      <div class="route-line-wrap" id="roadmapList"></div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section class="section" id="techstack">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Tech stack</h2>
+        <p>Every tool and technology used across the roadmap, with an honest answer to "do I actually need this?"</p>
+      </div>
+
+      <div class="card recommended-stack reveal-scale" style="margin-bottom:36px;">
+        <span class="tagline" style="margin-bottom:2px;">⭐ RECOMMENDED CORE STACK</span>
+        <h3 style="font-size:19px; margin-top:8px;">The main learning path</h3>
+        <p style="font-size:14px; color:var(--text-muted); margin-top:6px; max-width:520px;">If you only learn what's in this chain, you can go from zero to a hirable UI/UX Developer.</p>
+        <div class="marquee-wrap"><div class="marquee-track" id="stackChain"></div></div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="filter-group" id="filterCategory"></div>
+      </div>
+      <div class="filter-bar">
+        <div class="filter-group" id="filterLevel"></div>
+      </div>
+      <div class="tech-grid" id="techGrid"></div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section" id="projects">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Projects</h2>
+        <p>30% learning, 70% building. Five projects, increasing in scope, each documented like a real case study.</p>
+      </div>
+      <div class="project-list" id="projectList"></div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section" id="skills">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Skill matrix</h2>
+        <p>What "beginner," "intermediate," and "advanced" actually mean, category by category.</p>
+      </div>
+      <div class="skills-cats" id="skillsCats"></div>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Resources</h2>
+        <p>Official documentation only — no reposted tutorials, no paywalled courses required to get started.</p>
+      </div>
+      <div class="skills-cats" id="resourcesGrid"></div>
+    </div>
+  </section>
+
+  <!-- CAREER -->
+  <section class="section" id="career">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Career paths</h2>
+        <p>The same roadmap can take you toward five different roles, depending on where you choose to specialize.</p>
+      </div>
+      <div class="career-grid" id="careerGrid"></div>
+      <div class="table-wrap reveal">
+        <table class="compare-table" id="compareTable"></table>
+      </div>
+      <h3 style="font-size:18px; margin-top:52px; margin-bottom:6px;">The path to a job</h3>
+      <p style="font-size:14px; color:var(--text-muted); max-width:560px;">Every track above eventually funnels through the same sequence.</p>
+      <div class="career-path-chain" id="careerChain"></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Frequently asked questions</h2>
+      </div>
+      <div id="faqList" style="max-width:720px;"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="nav-brand" style="margin-bottom:8px;"><img src="cg.png" alt="" class="mark" aria-hidden="true">UI/UX Developer Roadmap</div>
+        <p style="font-size:13.5px; color:var(--text-muted);">Learn. Design. Build. Ship.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#techstack">Tech Stack</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#resources">Resources</a></li>
+        <li><a href="#career">Career</a></li>
+        <li><a href="#about-role">About</a></li>
+      </ul>
+    </div>
+    <div class="footer-bottom">
+      <span>Built for aspiring UI/UX Developers.</span>
+      <span style="text-align:center;">© Copyright Mohit Kumar All Rights Reserved<br>Designed &amp; Developed by <a href="https://www.instagram.com/team_codogram" target="_blank" rel="noopener noreferrer" style="color:var(--transit); font-weight:600;">Codogram</a></span>
+      <span id="footerProgress">0% of the roadmap complete</span>
+    </div>
+  </div>
+</footer>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="phaseModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" id="phaseModal"></div>
+</div>
+<div class="modal-overlay" id="techModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" id="techModal"></div>
+</div>
+<div class="modal-overlay" id="projectModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" id="projectModal"></div>
+</div>
+<div class="modal-overlay search-modal" id="searchOverlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" id="searchClose" aria-label="Close search">✕</button>
+    <h3 style="margin-bottom:14px;">Search</h3>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search phases, tech, projects, skills…" autocomplete="off">
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="authModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" id="authClose" aria-label="Close">✕</button>
+    <h3 style="margin-bottom:4px;">Welcome</h3>
+    <p class="auth-note" id="authNote">Stored only in this browser — there's no server behind this, so use a throwaway password.</p>
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" id="tabSignIn">Sign in</button>
+      <button type="button" class="auth-tab" id="tabSignUp">Sign up</button>
+    </div>
+    <div class="auth-error" id="authError"></div>
+
+    <form id="signInForm">
+      <div class="field"><label for="siEmail">Email</label><input type="email" id="siEmail" required autocomplete="email"></div>
+      <div class="field"><label for="siPassword">Password</label><input type="password" id="siPassword" required autocomplete="current-password"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Sign in</button>
+      <div class="auth-switch">New here? <button type="button" id="gotoSignUp">Create an account</button></div>
+    </form>
+
+    <form id="signUpForm" style="display:none;">
+      <div class="field"><label for="suName">Full name</label><input type="text" id="suName" required autocomplete="name"></div>
+      <div class="field"><label for="suEmail">Email</label><input type="email" id="suEmail" required autocomplete="email"></div>
+      <div class="field"><label for="suGoal">Learning goal</label>
+        <select id="suGoal"><option value="">Not sure yet</option></select>
+      </div>
+      <div class="field"><label for="suPassword">Password</label><input type="password" id="suPassword" required minlength="6" autocomplete="new-password"></div>
+      <div class="field"><label for="suPassword2">Confirm password</label><input type="password" id="suPassword2" required minlength="6" autocomplete="new-password"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Create account</button>
+      <div class="auth-switch">Already have an account? <button type="button" id="gotoSignIn">Sign in</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay profile-modal" id="profileModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" id="profileModal"></div>
+</div>
+
+<button type="button" class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M12 2.5c3.4 2.4 5 6.1 5 10.2 0 1.4-.3 2.8-.8 3.9H7.8c-.5-1.1-.8-2.5-.8-3.9 0-4.1 1.6-7.8 5-10.2z" fill="currentColor"/>
+    <path d="M7.3 12.2L4.2 14.8c-.4.3-.4.9 0 1.3l2.9 1.1c.2-.9.3-1.9.3-2.9 0-.7-.1-1.4-.1-2.1zM16.7 12.2l3.1 2.6c.4.3.4.9 0 1.3l-2.9 1.1c-.2-.9-.3-1.9-.3-2.9 0-.7.1-1.4.1-2.1z" fill="currentColor" opacity="0.82"/>
+    <circle cx="12" cy="9.5" r="2.1" fill="var(--surface)"/>
+    <path class="rocket-flame" d="M10 17.6h4l-2 4.2-2-4.2z" fill="var(--beacon)"/>
+  </svg>
+</button>
+
+<script>
+(function(){
+"use strict";
+
+const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ============================= BACKEND API CLIENT ============================= */
+// If a backend (see /backend in the project) is reachable at API_BASE, accounts and
+// progress are stored there. Otherwise everything falls back to this browser's
+// localStorage only — see checkServerMode() below.
+let API_BASE = localStorage.getItem("uiuxRoadmapApiBase") || "http://localhost:4000/api";
+let SERVER_MODE = false;
+let authToken = localStorage.getItem("uiuxRoadmapAuthToken") || null;
+
+async function apiFetch(path, options){
+  options = options || {};
+  const headers = Object.assign({ "Content-Type":"application/json" }, options.headers||{});
+  if(authToken) headers["Authorization"] = "Bearer "+authToken;
+  const res = await fetch(API_BASE+path, Object.assign({}, options, { headers }));
+  let data = null;
+  try{ data = await res.json(); }catch(e){}
+  if(!res.ok){ throw new Error((data && data.error) || ("Request failed ("+res.status+")")); }
+  return data;
+}
+function isServerSession(){ return SERVER_MODE && !!authToken && !!state.currentUser; }
+
+function renderBackendStatus(){}
+
+async function checkServerMode(){
+  try{
+    const ctrl = new AbortController();
+    const t = setTimeout(()=>ctrl.abort(), 2500);
+    const res = await fetch(API_BASE+"/health", { signal: ctrl.signal });
+    clearTimeout(t);
+    SERVER_MODE = !!res.ok;
+  }catch(e){
+    SERVER_MODE = false;
+  }
+  renderBackendStatus();
+  if(SERVER_MODE && authToken){
+    try{
+      const me = await apiFetch("/auth/me");
+      const email = me.user.email;
+      state.users[email] = me.user;
+      const bucket = await apiFetch("/progress");
+      state.progress[email] = bucket;
+      state.currentUser = email;
+      saveState();
+      renderAccountChip();
+      renderAll();
+    }catch(e){
+      authToken = null;
+      localStorage.removeItem("uiuxRoadmapAuthToken");
+    }
+  }
+}
+
+
+/* ============================= DATA ============================= */
+
+const TRACKS = {
+  foundation:{label:"Foundation", color:"var(--beacon)"},
+  ux:{label:"UX", color:"var(--teal)"},
+  design_system:{label:"Design Systems", color:"var(--violet)"},
+  frontend:{label:"Frontend", color:"var(--transit)"},
+  advanced:{label:"Advanced", color:"var(--rose)"},
+  career:{label:"Career", color:"var(--green)"}
+};
+
+const PHASES = [
+{id:1, track:"foundation", title:"Understand the UI/UX Developer Role", difficulty:"Beginner", duration:"1 week",
+ description:"Get oriented: how UI, UX, and frontend development relate, and where a UI/UX Developer sits between them.",
+ why:"Without this map, every later phase feels disconnected. This is the 'why' behind everything that follows.",
+ skills:["UI vs UX","UI Designer vs UX Designer","Product workflow","Career paths"],
+ tools:["Notion","Google Docs"],
+ project:"Write a one-page breakdown of the UI/UX Developer role in your own words.",
+ resources:[{name:"Nielsen Norman Group — UX basics", url:"https://www.nngroup.com/articles/definition-user-experience/"}]},
+{id:2, track:"foundation", title:"Design Fundamentals", difficulty:"Beginner", duration:"2–3 weeks",
+ description:"Typography, color theory, spacing, and the Gestalt principles that make an interface feel intentional.",
+ why:"Every visual decision after this phase rests on these fundamentals — skipping them shows up later as 'something feels off' interfaces.",
+ skills:["Typography","Color theory","Contrast","Visual hierarchy","Gestalt principles","Balance","Alignment"],
+ tools:["Figma","Adobe Color"],
+ project:"Recreate 5 professional interfaces pixel-for-pixel to train your eye.",
+ resources:[{name:"Interaction Design Foundation", url:"https://www.interaction-design.org/literature/topics/gestalt-principles"}]},
+{id:3, track:"foundation", title:"Layout & Visual Hierarchy", difficulty:"Beginner", duration:"1–2 weeks",
+ description:"Spacing systems, grids, containers, and mobile-first composition.",
+ why:"Consistent spacing is the single fastest way to make an interface look professional.",
+ skills:["4px/8px spacing systems","Grid","Columns","Responsive layouts","Mobile-first thinking"],
+ tools:["Figma"],
+ project:"Rebuild a landing page layout using an 8px grid system.",
+ resources:[{name:"web.dev — Layout", url:"https://web.dev/learn/css/layout/"}]},
+{id:4, track:"foundation", title:"Figma", difficulty:"Beginner", duration:"2–3 weeks",
+ description:"Frames, components, auto layout, variants, variables, and prototyping inside Figma.",
+ why:"Figma is the working language of modern product design — fluency here unblocks every design phase after it.",
+ skills:["Auto Layout","Components","Variants","Variables","Prototyping","Styles"],
+ tools:["Figma","FigJam"],
+ project:"Build a small UI kit: buttons, inputs, cards, navbar, modal, sidebar.",
+ resources:[{name:"Figma official docs", url:"https://www.figma.com"}]},
+{id:5, track:"foundation", title:"UI Design", difficulty:"Beginner → Intermediate", duration:"3–4 weeks",
+ description:"Applied UI across web, mobile, and SaaS: forms, navigation, tables, empty and error states.",
+ why:"This is where fundamentals turn into real, shippable screens.",
+ skills:["Web UI","Mobile UI","SaaS UI","Dashboard UI","Empty states","Loading states"],
+ tools:["Figma"],
+ project:"Design a landing page, a mobile app screen set, and a SaaS dashboard.",
+ resources:[{name:"web.dev — Design", url:"https://web.dev/learn/design/"}]},
+
+{id:6, track:"ux", title:"UX Fundamentals", difficulty:"Beginner", duration:"1 week",
+ description:"User-centered design, usability, user needs and goals, and core UX principles.",
+ why:"UI without UX is decoration. This phase sets the mindset for every research and flow decision after it.",
+ skills:["User-centered design","Usability","User needs","Pain points"],
+ tools:["Notion"],
+ project:"Write a short usability critique of an app you use daily.",
+ resources:[{name:"Nielsen Norman Group — Usability", url:"https://www.nngroup.com/articles/usability-101-introduction-to-usability/"}]},
+{id:7, track:"ux", title:"User Research", difficulty:"Intermediate", duration:"2 weeks",
+ description:"Interviews, surveys, competitor analysis, and turning raw observations into synthesized insight.",
+ why:"Research is what separates guessing from designing for real people.",
+ skills:["Interviews","Surveys","Competitor analysis","Research synthesis"],
+ tools:["Google Forms","Typeform","Notion"],
+ project:"Run 5 short user interviews on a problem you want to design for.",
+ resources:[{name:"Nielsen Norman Group — Research methods", url:"https://www.nngroup.com/articles/which-ux-research-methods/"}]},
+{id:8, track:"ux", title:"User Flows", difficulty:"Intermediate", duration:"1 week",
+ description:"Task flows, journey maps, navigation structure, and information architecture.",
+ why:"A clear flow prevents you from designing beautiful screens that don't connect into a usable product.",
+ skills:["User flows","Journey maps","Information architecture"],
+ tools:["FigJam","Figma"],
+ project:"Map the full checkout flow for an e-commerce product.",
+ resources:[{name:"Interaction Design Foundation — User flows", url:"https://www.interaction-design.org/literature/topics/user-flow"}]},
+{id:9, track:"ux", title:"Wireframing", difficulty:"Beginner → Intermediate", duration:"1–2 weeks",
+ description:"Low, mid, and high fidelity wireframes that establish content hierarchy before visual polish.",
+ why:"Wireframing early prevents expensive redesigns later — structure before decoration.",
+ skills:["Low fidelity","Mid fidelity","High fidelity","Content hierarchy"],
+ tools:["Figma","FigJam"],
+ project:"Wireframe a full app in low fidelity before touching color.",
+ resources:[{name:"Figma — Wireframing guide", url:"https://www.figma.com/resource-library/what-is-wireframing/"}]},
+{id:10, track:"ux", title:"Prototyping", difficulty:"Intermediate", duration:"1–2 weeks",
+ description:"Interactive prototypes, transitions, micro-interactions, and lightweight usability testing.",
+ why:"A clickable prototype is how you validate a flow before a single line of code is written.",
+ skills:["Interactive prototypes","Micro-interactions","Usability testing"],
+ tools:["Figma","Maze"],
+ project:"Build a clickable prototype and test it with 3 people outside your team.",
+ resources:[{name:"Figma — Prototyping", url:"https://www.figma.com/prototyping/"}]},
+
+{id:11, track:"design_system", title:"Design Systems", difficulty:"Intermediate", duration:"2–3 weeks",
+ description:"Design tokens, component states, and the anatomy of a scalable system.",
+ why:"Design systems are how consistency survives a product growing past a handful of screens.",
+ skills:["Design tokens","Component states","Color/typography/spacing tokens"],
+ tools:["Figma Variables","Tokens Studio"],
+ project:"Turn your UI kit from Phase 04 into a documented token-based system.",
+ resources:[{name:"Figma — Design systems", url:"https://www.figma.com/design-systems/"}]},
+{id:12, track:"design_system", title:"Responsive Design", difficulty:"Intermediate", duration:"1–2 weeks",
+ description:"Designing across mobile, tablet, laptop, and desktop with fluid layouts and typography.",
+ why:"Most real traffic is multi-device — a design that only works at one width isn't finished.",
+ skills:["Breakpoints","Fluid layouts","Responsive typography"],
+ tools:["Figma","Chrome DevTools"],
+ project:"Adapt one dashboard design across four breakpoints.",
+ resources:[{name:"MDN — Responsive design", url:"https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Responsive_Design"}]},
+{id:13, track:"design_system", title:"Advanced UI Patterns", difficulty:"Intermediate → Advanced", duration:"2 weeks",
+ description:"Tables, filters, multi-step forms, modals, toasts, and skeleton screens.",
+ why:"These patterns show up in almost every real product — knowing them well speeds up every future project.",
+ skills:["Multi-step forms","Filters & pagination","Skeleton screens","Notifications"],
+ tools:["Figma"],
+ project:"Design a filterable, paginated data table with empty and loading states.",
+ resources:[{name:"web.dev — UI patterns", url:"https://web.dev/patterns/"}]},
+{id:14, track:"design_system", title:"Motion & Interaction Design", difficulty:"Intermediate", duration:"1 week",
+ description:"Micro-interactions, hover states, loading and page transitions.",
+ why:"Motion should improve usability, not distract — this phase teaches the difference.",
+ skills:["Micro-interactions","Transitions","Scroll animations"],
+ tools:["Figma","Lottie"],
+ project:"Add purposeful hover and loading motion to one existing screen.",
+ resources:[{name:"web.dev — Animations guide", url:"https://web.dev/learn/css/animations/"}]},
+
+{id:15, track:"frontend", title:"HTML", difficulty:"Beginner", duration:"1–2 weeks",
+ description:"Semantic HTML5: structure, forms, tables, and accessibility basics baked in from the start.",
+ why:"Semantic markup is the foundation every later accessibility and SEO phase depends on.",
+ skills:["Semantic HTML","Forms","Accessibility basics"],
+ tools:["VS Code"],
+ project:"Rebuild a wireframe from Phase 09 in plain semantic HTML.",
+ resources:[{name:"MDN — HTML", url:"https://developer.mozilla.org/en-US/docs/Web/HTML"}]},
+{id:16, track:"frontend", title:"CSS", difficulty:"Beginner", duration:"2–3 weeks",
+ description:"The box model, Flexbox, Grid, positioning, and media queries.",
+ why:"CSS is how the layouts and design tokens from earlier phases actually render.",
+ skills:["Flexbox","CSS Grid","Box model","Media queries"],
+ tools:["VS Code","Chrome DevTools"],
+ project:"Style the HTML page from Phase 15 to match your Figma design exactly.",
+ resources:[{name:"MDN — CSS", url:"https://developer.mozilla.org/en-US/docs/Web/CSS"}]},
+{id:17, track:"frontend", title:"Modern CSS", difficulty:"Intermediate", duration:"1–2 weeks",
+ description:"CSS variables, clamp(), container queries, and component-based CSS with BEM.",
+ why:"Modern CSS reduces the amount of JavaScript needed for things that used to require it.",
+ skills:["CSS variables","clamp()/calc()","Container queries","BEM"],
+ tools:["VS Code"],
+ project:"Convert a fixed layout to use clamp() and container queries.",
+ resources:[{name:"web.dev — Modern CSS", url:"https://web.dev/learn/css/"}]},
+{id:18, track:"frontend", title:"JavaScript", difficulty:"Intermediate", duration:"4–5 weeks",
+ description:"Core JS: functions, DOM, events, fetch, promises, async/await, and modules.",
+ why:"JavaScript is what turns a static page into an application.",
+ skills:["DOM & events","Fetch API","Promises","Async/Await","Modules"],
+ tools:["VS Code","Chrome DevTools"],
+ project:"Build a small interactive form with validation and a fetch-based API call.",
+ resources:[{name:"MDN — JavaScript", url:"https://developer.mozilla.org/en-US/docs/Web/JavaScript"}]},
+{id:19, track:"frontend", title:"Git & GitHub", difficulty:"Beginner → Intermediate", duration:"1 week",
+ description:"Repositories, branches, commits, pull requests, and collaboration basics.",
+ why:"Version control is non-negotiable for any real project or job.",
+ skills:["Branches","Commits","Pull requests","README docs"],
+ tools:["Git","GitHub"],
+ project:"Push every project from this roadmap to a public GitHub repo with a proper README.",
+ resources:[{name:"Git documentation", url:"https://git-scm.com"}, {name:"GitHub Docs", url:"https://docs.github.com"}]},
+{id:20, track:"frontend", title:"React", difficulty:"Intermediate", duration:"3–4 weeks",
+ description:"Components, props, state, hooks (useState, useEffect, useRef, useMemo, useCallback).",
+ why:"React is the most in-demand frontend framework for UI/UX Developer roles.",
+ skills:["Components & props","useState/useEffect","Conditional rendering","Lists & forms"],
+ tools:["React","Vite"],
+ project:"Rebuild the SaaS dashboard design as a working React app.",
+ resources:[{name:"React official docs", url:"https://react.dev"}]},
+{id:21, track:"frontend", title:"Advanced React", difficulty:"Intermediate → Advanced", duration:"3 weeks",
+ description:"Routing, API integration, auth, context, custom hooks, and an introduction to Next.js.",
+ why:"This is where React apps start to resemble real products with real data.",
+ skills:["React Router","Context","Custom hooks","Next.js basics"],
+ tools:["Next.js","React Router"],
+ project:"Add authenticated routes and live API data to your dashboard app.",
+ resources:[{name:"Next.js docs", url:"https://nextjs.org/docs"}]},
+{id:22, track:"frontend", title:"UI Libraries", difficulty:"Intermediate", duration:"1 week",
+ description:"shadcn/ui, Radix UI, and when to reach for a library instead of a custom component.",
+ why:"Knowing when NOT to build from scratch is as valuable as knowing how to build.",
+ skills:["shadcn/ui","Radix UI","Custom vs library components"],
+ tools:["shadcn/ui","Radix UI"],
+ project:"Swap 3 hand-built components in your app for shadcn/ui equivalents.",
+ resources:[{name:"shadcn/ui docs", url:"https://ui.shadcn.com"}, {name:"Radix UI docs", url:"https://www.radix-ui.com"}]},
+{id:23, track:"frontend", title:"Tailwind CSS", difficulty:"Intermediate", duration:"1–2 weeks",
+ description:"Utility-first styling, responsive utilities, dark mode, and custom themes.",
+ why:"Tailwind is the fastest way to translate design tokens directly into styled markup.",
+ skills:["Utility classes","Responsive utilities","Dark mode","Custom themes"],
+ tools:["Tailwind CSS"],
+ project:"Re-style your React app using Tailwind instead of custom CSS.",
+ resources:[{name:"Tailwind CSS docs", url:"https://tailwindcss.com/docs"}]},
+{id:24, track:"frontend", title:"APIs", difficulty:"Intermediate", duration:"2 weeks",
+ description:"REST methods, JSON, status codes, headers, and authentication/authorization.",
+ why:"Almost every real product is powered by an API — you need to speak this language fluently.",
+ skills:["REST methods","JSON","Status codes","Auth"],
+ tools:["Postman","Swagger/OpenAPI"],
+ project:"Connect your dashboard app to a real public API with authenticated requests.",
+ resources:[{name:"MDN — HTTP", url:"https://developer.mozilla.org/en-US/docs/Web/HTTP"}, {name:"Postman learning center", url:"https://learning.postman.com"}]},
+
+{id:25, track:"advanced", title:"Accessibility", difficulty:"Intermediate → Advanced", duration:"2 weeks",
+ description:"WCAG, ARIA, keyboard navigation, focus states, and screen reader support.",
+ why:"Accessible design is not optional — it determines whether your product actually works for everyone.",
+ skills:["WCAG","ARIA","Keyboard navigation","Color contrast"],
+ tools:["Lighthouse","axe","WAVE"],
+ project:"Run an accessibility audit on your dashboard app and fix every critical issue.",
+ resources:[{name:"WCAG guidelines (W3C)", url:"https://www.w3.org/WAI/standards-guidelines/wcag/"}, {name:"axe DevTools", url:"https://www.deque.com/axe/"}]},
+{id:26, track:"advanced", title:"Frontend Performance", difficulty:"Advanced", duration:"2 weeks",
+ description:"Lazy loading, code splitting, image/font optimization, and Core Web Vitals.",
+ why:"A beautiful interface that loads slowly loses users before they see it.",
+ skills:["Code splitting","Image optimization","Core Web Vitals","Caching"],
+ tools:["Lighthouse","PageSpeed Insights","WebPageTest"],
+ project:"Get your app's Lighthouse performance score above 90.",
+ resources:[{name:"web.dev — Performance", url:"https://web.dev/learn/performance/"}]},
+{id:27, track:"advanced", title:"Product Design & Analytics", difficulty:"Advanced", duration:"2 weeks",
+ description:"Product thinking, funnels, activation and retention, and A/B testing basics.",
+ why:"Understanding how a product performs after launch turns you into a design partner, not just an executor.",
+ skills:["Funnel analysis","Activation & retention","A/B testing"],
+ tools:["Google Analytics","PostHog","Mixpanel"],
+ project:"Instrument your app with basic analytics and identify one drop-off point.",
+ resources:[{name:"PostHog docs", url:"https://posthog.com/docs"}]},
+{id:28, track:"advanced", title:"Advanced Design Systems", difficulty:"Advanced", duration:"2 weeks",
+ description:"Component APIs, documentation, versioning, and designer/developer collaboration.",
+ why:"At scale, a design system is a product of its own, with its own users: other designers and engineers.",
+ skills:["Component APIs","Documentation","Governance"],
+ tools:["Storybook","Style Dictionary"],
+ project:"Document your design system components in Storybook.",
+ resources:[{name:"Storybook docs", url:"https://storybook.js.org/docs"}]},
+{id:29, track:"advanced", title:"AI for UI/UX Developers", difficulty:"Advanced", duration:"1 week",
+ description:"Responsible AI use across research synthesis, design exploration, and code generation.",
+ why:"AI should accelerate your workflow, not replace your design and development fundamentals.",
+ skills:["AI-assisted research synthesis","AI-assisted code generation","Prompting for design exploration"],
+ tools:["Claude","GitHub Copilot","Figma AI"],
+ project:"Use an AI tool to accelerate one research task and one coding task — then document what it got wrong.",
+ resources:[{name:"Claude documentation", url:"https://docs.claude.com"}]},
+
+{id:30, track:"career", title:"Portfolio", difficulty:"Advanced", duration:"2–3 weeks",
+ description:"A portfolio site with real case studies, process, and links to live projects.",
+ why:"Your portfolio is the single artifact hiring managers actually evaluate.",
+ skills:["Case studies","Process documentation","Live project links"],
+ tools:["Next.js","Vercel"],
+ project:"Publish a portfolio site featuring your best 3 projects from this roadmap.",
+ resources:[{name:"web.dev — Portfolio sites", url:"https://web.dev/"}]},
+{id:31, track:"career", title:"Real-World Projects", difficulty:"Beginner → Advanced", duration:"Ongoing",
+ description:"The five flagship projects that anchor this roadmap — see the Projects section.",
+ why:"Projects are proof of skill. Everything else in this roadmap exists to make these possible.",
+ skills:["End-to-end product thinking"],
+ tools:["Figma","React","APIs"],
+ project:"Complete all 5 projects and link each in your portfolio.",
+ resources:[]},
+{id:32, track:"career", title:"Deployment", difficulty:"Intermediate", duration:"1 week",
+ description:"Vercel, Netlify, environment variables, domains, and CI/CD basics.",
+ why:"A project that only runs on your laptop isn't finished — deployment is the last 10% that matters most.",
+ skills:["Vercel/Netlify","Environment variables","CI/CD basics"],
+ tools:["Vercel","Netlify","GitHub Actions"],
+ project:"Deploy your flagship project with a custom domain and HTTPS.",
+ resources:[{name:"Vercel docs", url:"https://vercel.com/docs"}, {name:"Netlify docs", url:"https://docs.netlify.com"}]},
+{id:33, track:"career", title:"Resume & LinkedIn", difficulty:"Advanced", duration:"1 week",
+ description:"Resume structure, project descriptions, skills sections, and recruiter-facing LinkedIn profiles.",
+ why:"Your resume gets you the interview; your portfolio gets you the job.",
+ skills:["Resume structure","Project descriptions","LinkedIn optimization"],
+ tools:["LinkedIn"],
+ project:"Rewrite your resume around the 5 flagship projects from this roadmap.",
+ resources:[]},
+{id:34, track:"career", title:"Job Preparation", difficulty:"Advanced", duration:"2–3 weeks",
+ description:"Design challenges, frontend coding challenges, portfolio presentation, and behavioral interviews.",
+ why:"Interview skill is a separate, practicable skill from design and coding skill.",
+ skills:["Design challenges","Coding challenges","Portfolio presentation","Behavioral interviews"],
+ tools:[],
+ project:"Do 3 mock interviews — one design, one frontend coding, one behavioral.",
+ resources:[]}
+];
+
+const TECH = [
+{name:"Figma", cat:"Design", level:"essential", phase:4, why:"The industry-standard design and prototyping tool.", url:"https://www.figma.com"},
+{name:"FigJam", cat:"Design", level:"recommended", phase:8, why:"Whiteboarding for user flows and journey maps.", url:"https://www.figma.com/figjam/"},
+{name:"Photoshop", cat:"Design", level:"optional", phase:5, why:"Useful for photo editing and asset prep, rarely for UI itself.", url:"https://www.adobe.com/products/photoshop.html"},
+{name:"Illustrator", cat:"Design", level:"optional", phase:5, why:"Vector illustration for icons and custom graphics.", url:"https://www.adobe.com/products/illustrator.html"},
+{name:"Framer", cat:"Design", level:"optional", phase:10, why:"High-fidelity interactive prototyping beyond Figma's native tools.", url:"https://www.framer.com"},
+{name:"Sketch", cat:"Design", level:"optional", phase:4, why:"A Figma alternative, mostly relevant on legacy Mac-only teams.", url:"https://www.sketch.com"},
+
+{name:"Maze", cat:"UX Research", level:"recommended", phase:10, why:"Remote usability testing on your prototypes.", url:"https://maze.co"},
+{name:"Hotjar", cat:"UX Research", level:"recommended", phase:27, why:"Session recordings and heatmaps for real usage.", url:"https://www.hotjar.com"},
+{name:"Microsoft Clarity", cat:"UX Research", level:"recommended", phase:27, why:"Free heatmaps and recordings — a lighter Hotjar alternative.", url:"https://clarity.microsoft.com"},
+{name:"Google Analytics", cat:"UX Research", level:"essential", phase:27, why:"The baseline tool for understanding how people use what you ship.", url:"https://analytics.google.com"},
+{name:"Google Forms", cat:"UX Research", level:"recommended", phase:7, why:"Fast, free surveys for early research.", url:"https://www.google.com/forms/about/"},
+{name:"Typeform", cat:"UX Research", level:"optional", phase:7, why:"Nicer-feeling surveys when it matters for response rate.", url:"https://www.typeform.com"},
+{name:"Notion", cat:"UX Research", level:"recommended", phase:7, why:"Organizing research notes and synthesis.", url:"https://www.notion.so"},
+
+{name:"Figma Variables", cat:"Design Systems", level:"essential", phase:11, why:"Native design tokens inside Figma.", url:"https://www.figma.com/design-systems/"},
+{name:"Storybook", cat:"Design Systems", level:"advanced", phase:28, why:"Documents and tests UI components in isolation.", url:"https://storybook.js.org"},
+{name:"Tokens Studio", cat:"Design Systems", level:"advanced", phase:11, why:"Syncs design tokens between Figma and code.", url:"https://tokens.studio"},
+{name:"Style Dictionary", cat:"Design Systems", level:"advanced", phase:28, why:"Transforms design tokens into code for any platform.", url:"https://amzn.github.io/style-dictionary/"},
+
+{name:"HTML", cat:"Frontend", level:"essential", phase:15, why:"The structural foundation of every web interface.", url:"https://developer.mozilla.org/en-US/docs/Web/HTML"},
+{name:"CSS", cat:"Frontend", level:"essential", phase:16, why:"How every design decision actually renders in the browser.", url:"https://developer.mozilla.org/en-US/docs/Web/CSS"},
+{name:"JavaScript", cat:"Frontend", level:"essential", phase:18, why:"Turns static pages into interactive applications.", url:"https://developer.mozilla.org/en-US/docs/Web/JavaScript"},
+{name:"TypeScript", cat:"Frontend", level:"recommended", phase:20, why:"Catches bugs before runtime and is expected on most professional teams.", url:"https://www.typescriptlang.org"},
+{name:"React", cat:"Frontend", level:"essential", phase:20, why:"The most in-demand frontend framework for this role.", url:"https://react.dev"},
+{name:"Next.js", cat:"Frontend", level:"recommended", phase:21, why:"Production React with routing and rendering handled for you.", url:"https://nextjs.org"},
+{name:"Angular", cat:"Frontend", level:"optional", phase:20, why:"Common in enterprise teams, but not the default starting point here.", url:"https://angular.dev"},
+{name:"Vue", cat:"Frontend", level:"optional", phase:20, why:"A solid alternative to React, only worth it if a team already uses it.", url:"https://vuejs.org"},
+
+{name:"Tailwind CSS", cat:"Styling", level:"recommended", phase:23, why:"The fastest way to translate design tokens into styled markup.", url:"https://tailwindcss.com"},
+
+{name:"shadcn/ui", cat:"UI Libraries", level:"recommended", phase:22, why:"Copy-paste accessible components built on Radix.", url:"https://ui.shadcn.com"},
+{name:"Radix UI", cat:"UI Libraries", level:"advanced", phase:22, why:"Unstyled, accessible primitives most component libraries are built on.", url:"https://www.radix-ui.com"},
+{name:"Material UI", cat:"UI Libraries", level:"optional", phase:22, why:"Useful for Material Design-specific products.", url:"https://mui.com"},
+{name:"Ant Design", cat:"UI Libraries", level:"optional", phase:22, why:"Common in admin/dashboard-heavy enterprise apps.", url:"https://ant.design"},
+{name:"Chakra UI", cat:"UI Libraries", level:"optional", phase:22, why:"A friendly alternative when you want more built-in styling.", url:"https://www.chakra-ui.com"},
+
+{name:"Zustand", cat:"State", level:"advanced", phase:21, why:"Minimal global state once Context stops being enough.", url:"https://zustand-demo.pmnd.rs"},
+{name:"Redux Toolkit", cat:"State", level:"advanced", phase:21, why:"Still common in larger, older React codebases.", url:"https://redux-toolkit.js.org"},
+{name:"TanStack Query", cat:"State", level:"advanced", phase:24, why:"Handles server state — caching, retries, and refetching.", url:"https://tanstack.com/query"},
+
+{name:"Node.js", cat:"Backend Basics", level:"recommended", phase:24, why:"Understanding basic backend concepts makes you a stronger frontend collaborator.", url:"https://nodejs.org"},
+{name:"Express.js", cat:"Backend Basics", level:"optional", phase:24, why:"Useful for building a mock API to practice against.", url:"https://expressjs.com"},
+{name:"Firebase", cat:"Backend Basics", level:"recommended", phase:24, why:"The fastest way to add real data and auth to a portfolio project.", url:"https://firebase.google.com/docs"},
+{name:"Supabase", cat:"Backend Basics", level:"recommended", phase:24, why:"An open-source Firebase alternative with a Postgres database.", url:"https://supabase.com/docs"},
+
+{name:"Postman", cat:"API Tools", level:"recommended", phase:24, why:"Testing and exploring APIs before wiring them into your app.", url:"https://www.postman.com"},
+{name:"Swagger/OpenAPI", cat:"API Tools", level:"advanced", phase:24, why:"Reading and understanding API contracts on real teams.", url:"https://swagger.io"},
+
+{name:"VS Code", cat:"Development", level:"essential", phase:15, why:"The default editor for nearly every frontend workflow.", url:"https://code.visualstudio.com"},
+{name:"Cursor", cat:"Development", level:"recommended", phase:29, why:"An AI-native editor for faster iteration once you know the fundamentals.", url:"https://www.cursor.com"},
+{name:"Chrome DevTools", cat:"Development", level:"essential", phase:16, why:"Inspecting, debugging, and profiling everything you build.", url:"https://developer.chrome.com/docs/devtools"},
+{name:"Vite", cat:"Development", level:"recommended", phase:20, why:"Fast local dev server and build tool for modern frontend projects.", url:"https://vite.dev"},
+
+{name:"Git", cat:"Version Control", level:"essential", phase:19, why:"Version control is required on every real engineering team.", url:"https://git-scm.com"},
+{name:"GitHub", cat:"Version Control", level:"essential", phase:19, why:"Where your portfolio code actually lives and gets reviewed.", url:"https://github.com"},
+
+{name:"Vitest", cat:"Testing", level:"advanced", phase:24, why:"Fast unit testing for Vite-based projects.", url:"https://vitest.dev"},
+{name:"Playwright", cat:"Testing", level:"advanced", phase:24, why:"End-to-end testing across real browsers.", url:"https://playwright.dev"},
+{name:"Cypress", cat:"Testing", level:"optional", phase:24, why:"A common alternative to Playwright for E2E testing.", url:"https://www.cypress.io"},
+
+{name:"Lighthouse", cat:"Accessibility & Performance", level:"essential", phase:25, why:"Free, built-into-Chrome auditing for a11y and performance.", url:"https://developer.chrome.com/docs/lighthouse"},
+{name:"axe DevTools", cat:"Accessibility & Performance", level:"recommended", phase:25, why:"Deeper automated accessibility scanning than Lighthouse alone.", url:"https://www.deque.com/axe/"},
+{name:"WAVE", cat:"Accessibility & Performance", level:"recommended", phase:25, why:"Visual, in-page accessibility evaluation.", url:"https://wave.webaim.org"},
+
+{name:"Vercel", cat:"Deployment", level:"recommended", phase:32, why:"The simplest path to deploying a Next.js portfolio project.", url:"https://vercel.com"},
+{name:"Netlify", cat:"Deployment", level:"recommended", phase:32, why:"A solid Vercel alternative, especially for static sites.", url:"https://www.netlify.com"},
+
+{name:"Mixpanel", cat:"Analytics", level:"optional", phase:27, why:"Deeper product analytics once you're past basic pageviews.", url:"https://mixpanel.com"},
+{name:"PostHog", cat:"Analytics", level:"recommended", phase:27, why:"Open-source product analytics with a generous free tier.", url:"https://posthog.com"},
+
+{name:"Notion (PM)", cat:"Collaboration", level:"recommended", phase:1, why:"Documentation and light project planning.", url:"https://www.notion.so"},
+{name:"Linear", cat:"Collaboration", level:"optional", phase:1, why:"Common issue tracker on product teams.", url:"https://linear.app"},
+{name:"Slack", cat:"Collaboration", level:"optional", phase:1, why:"Team communication — good to know exists, not essential solo.", url:"https://slack.com"},
+
+{name:"Claude", cat:"AI", level:"recommended", phase:29, why:"Assists research synthesis, code generation, and debugging.", url:"https://claude.ai"},
+{name:"GitHub Copilot", cat:"AI", level:"optional", phase:29, why:"In-editor code suggestions once you understand what it's suggesting.", url:"https://github.com/features/copilot"},
+{name:"Figma AI", cat:"AI", level:"optional", phase:29, why:"Speeds up early design exploration inside Figma.", url:"https://www.figma.com/ai/"}
+];
+
+const PROJECTS = [
+{id:1, title:"SaaS Landing Page", difficulty:"Beginner", flagship:false,
+ skills:["Figma","Typography","Color","HTML","CSS","Responsive design"],
+ steps:["Problem","Competitor analysis","Wireframes","High-fidelity UI","Development","Final product"]},
+{id:2, title:"Food Delivery App", difficulty:"Beginner → Intermediate", flagship:false,
+ skills:["UX research","Personas","User flows","Wireframes","Figma","Prototype"],
+ steps:["Research","Persona","User journey","User flow","Wireframes","Prototype","Testing"]},
+{id:3, title:"SaaS Dashboard", difficulty:"Intermediate", flagship:false,
+ skills:["Design systems","Components","Tables","Charts","Responsive UI","React"],
+ steps:["Information architecture","Design system","High-fidelity UI","Development","Testing"]},
+{id:4, title:"E-commerce Application", difficulty:"Intermediate → Advanced", flagship:false,
+ skills:["React","APIs","State","Search","Filtering","Cart","Authentication"],
+ steps:["User flow","Design system","Development","APIs","Testing","Improvements"]},
+{id:5, title:"Real-World Product", difficulty:"Advanced", flagship:true,
+ skills:["Research","UX","UI","Design system","React","API","Accessibility","Performance","Testing","Deployment"],
+ steps:["Problem","Research","User problems","Competitor analysis","Persona","User journey","Information architecture","User flow","Wireframes","Design system","High-fidelity UI","Prototype","Development","Testing","Improvements","Final product"]}
+];
+
+const SKILLS_MATRIX = {
+  "UI":{color:"var(--beacon)", items:[["Typography","Advanced"],["Color","Advanced"],["Layout","Advanced"],["Visual hierarchy","Advanced"],["Components","Intermediate"],["Responsive design","Intermediate"]]},
+  "UX":{color:"var(--teal)", items:[["Research","Intermediate"],["Personas","Intermediate"],["User flows","Intermediate"],["Wireframes","Advanced"],["Prototyping","Advanced"],["Testing","Intermediate"]]},
+  "Development":{color:"var(--transit)", items:[["HTML","Advanced"],["CSS","Advanced"],["JavaScript","Intermediate"],["TypeScript","Intermediate"],["React","Intermediate"],["Next.js","Beginner"],["APIs","Intermediate"]]},
+  "Advanced":{color:"var(--rose)", items:[["Accessibility","Intermediate"],["Performance","Intermediate"],["Design systems","Advanced"],["Analytics","Beginner"],["Testing","Beginner"],["AI workflows","Beginner"]]}
+};
+
+const RESOURCE_CATS = {
+  "Design":{color:"var(--beacon)", items:[["Figma docs","https://www.figma.com"],["Interaction Design Foundation","https://www.interaction-design.org"],["web.dev — Design","https://web.dev/learn/design/"]]},
+  "UX":{color:"var(--teal)", items:[["Nielsen Norman Group","https://www.nngroup.com"],["Figma — Wireframing guide","https://www.figma.com/resource-library/what-is-wireframing/"]]},
+  "Development":{color:"var(--transit)", items:[["MDN Web Docs","https://developer.mozilla.org"],["React docs","https://react.dev"],["Next.js docs","https://nextjs.org/docs"],["Tailwind CSS docs","https://tailwindcss.com/docs"]]},
+  "Tools":{color:"var(--violet)", items:[["GitHub Docs","https://docs.github.com"],["VS Code docs","https://code.visualstudio.com/docs"],["Chrome DevTools docs","https://developer.chrome.com/docs/devtools"]]}
+};
+
+const CAREERS = [
+{title:"UI Designer", focus:"Visual design and interfaces."},
+{title:"UX Designer", focus:"Research and usability."},
+{title:"UI/UX Developer", focus:"Design + UX + frontend."},
+{title:"Product Designer", focus:"UX + UI + product strategy."},
+{title:"Frontend Developer", focus:"Production interfaces."}
+];
+
+const COMPARE_ROWS = [
+ ["Visual design (Figma)", "High","Medium","High","High","Low"],
+ ["User research","Low","High","Medium","High","Low"],
+ ["HTML/CSS/JS","Low","Low","High","Low","High"],
+ ["React/Next.js","None","None","High","Low","High"],
+ ["Design systems","Medium","Low","High","Medium","Medium"],
+ ["Product strategy","Low","Medium","Medium","High","Low"]
+];
+
+const CAREER_CHAIN = ["Learn","Practice","Build Projects","Create Portfolio","Write Resume","Optimize LinkedIn","Practice Interviews","Apply","Interview","Job"];
+
+const FAQS = [
+["What is a UI/UX Developer?","Someone who can design an interface and also build it — combining visual/UX design skill with frontend engineering. It's a hybrid role that sits between design and development teams."],
+["Do I need coding skills?","Eventually, yes, if you want the full 'Developer' half of the title. You can start purely on the design track (Phases 1–14) and add frontend skills afterward."],
+["Should I learn UI or UX first?","Start with Design Fundamentals (Phase 02) — it underpins both. From there, UI and UX can be learned roughly in parallel."],
+["Do I need Figma?","Yes. It's the essential, industry-standard design tool used across almost every product team."],
+["How long does it take to become job-ready?","It depends on your daily time commitment — use the calculator in the Dashboard section above for a personalized estimate."],
+["Should I learn React?","Yes, it's marked essential in the recommended core stack — it's the most requested frontend framework for this role."],
+["Should I learn TypeScript?","It's recommended, not essential to start. Learn it once you're comfortable with JavaScript and React."],
+["Do I need to learn every technology?","No. Follow the ⭐ Recommended Core Stack for the shortest path — everything else is there for reference when you need it."],
+["How many projects should I build?","This roadmap includes 5, ending with one flagship project that combines every skill you've learned."],
+["Do I need a degree?","No. A strong portfolio of real, well-documented projects carries more weight than a credential in this field."],
+["Can I become a UI/UX Developer without experience?","Yes — your portfolio projects are your experience. Treat each one like a real case study."],
+["What should I put in my portfolio?","3–5 projects with process documented (problem, research, design, development, outcome), live links, and GitHub links."]
+];
+
+/* ============================= STATE ============================= */
+
+const LS_KEY = "uiuxRoadmapProgress_v1";
+function freshBucket(){ return {phases:{}, tech:{}, projects:{}, hrsPerDay:3, activity:[]}; }
+function freshState(){ return { theme:null, currentUser:null, users:{}, progress:{ guest: freshBucket() } }; }
+function migrateState(s){
+  if(s && s.progress){
+    if(!s.progress.guest) s.progress.guest = freshBucket();
+    if(!s.users) s.users = {};
+    if(s.currentUser === undefined) s.currentUser = null;
+    Object.values(s.progress).forEach(b=>{ if(!b.activity) b.activity = []; if(!b.hrsPerDay) b.hrsPerDay = 3; });
+    return s;
+  }
+  // old single-bucket shape from a previous version of this app
+  const bucket = freshBucket();
+  if(s){
+    bucket.phases = s.phases || {};
+    bucket.tech = s.tech || {};
+    bucket.projects = s.projects || {};
+    bucket.hrsPerDay = s.hrsPerDay || 3;
+  }
+  return { theme:(s && s.theme) || null, currentUser:null, users:{}, progress:{ guest: bucket } };
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw) return migrateState(JSON.parse(raw));
+  }catch(e){}
+  return freshState();
+}
+let state = loadState();
+function saveState(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
+}
+function getActiveBucket(){
+  const key = state.currentUser || "guest";
+  if(!state.progress[key]) state.progress[key] = freshBucket();
+  return state.progress[key];
+}
+function logActivity(type, name, status){
+  const bucket = getActiveBucket();
+  bucket.activity = bucket.activity || [];
+  bucket.activity.unshift({type, name, status, date:new Date().toISOString()});
+  if(bucket.activity.length > 80) bucket.activity.length = 80;
+}
+function getPhaseStatus(id){ return getActiveBucket().phases[id] || "not_started"; }
+function setPhaseStatus(id, status, evt){
+  const bucket = getActiveBucket();
+  const prev = bucket.phases[id] || "not_started";
+  bucket.phases[id] = status;
+  if(prev !== status){
+    const p = PHASES.find(x=>x.id===id);
+    logActivity("phase", p ? p.title : ("Phase "+id), status);
+    if(status==="completed" && prev!=="completed") celebrate(evt);
+    if(isServerSession()){
+      const title = (p ? p.title : ("Phase "+id));
+      apiFetch("/progress/phase/"+id, { method:"PATCH", body:JSON.stringify({ status, name:title }) }).catch(err=>console.warn("Sync failed:", err.message));
+    }
+  }
+  saveState();
+  const station = document.querySelector(`.station[data-phase="${id}"]`);
+  if(station){
+    station.classList.toggle("done", status==="completed");
+    const chk = station.querySelector(".status-check");
+    if(chk) chk.className = `status-check ${status==="completed"?"completed":(status==="learning"?"learning":"")}`;
+  }
+  renderDashboard();
+}
+function getTechStatus(name){ return getActiveBucket().tech[name] || "not_started"; }
+function setTechStatus(name, status, evt){
+  const bucket = getActiveBucket();
+  const prev = bucket.tech[name] || "not_started";
+  bucket.tech[name] = status;
+  if(prev !== status){
+    logActivity("tech", name, status);
+    if(status==="completed" && prev!=="completed") celebrate(evt);
+    if(isServerSession()){
+      apiFetch("/progress/tech/"+encodeURIComponent(name), { method:"PATCH", body:JSON.stringify({ status }) }).catch(err=>console.warn("Sync failed:", err.message));
+    }
+  }
+  saveState();
+  renderDashboard();
+}
+function getProjectStatus(id){ return getActiveBucket().projects[id] || "not_started"; }
+function setProjectStatus(id, status, evt){
+  const bucket = getActiveBucket();
+  const prev = bucket.projects[id] || "not_started";
+  bucket.projects[id] = status;
+  if(prev !== status){
+    const p = PROJECTS.find(x=>x.id===id);
+    logActivity("project", p ? p.title : ("Project "+id), status);
+    if(status==="completed" && prev!=="completed") celebrate(evt);
+    if(isServerSession()){
+      const title = (p ? p.title : ("Project "+id));
+      apiFetch("/progress/project/"+id, { method:"PATCH", body:JSON.stringify({ status, name:title }) }).catch(err=>console.warn("Sync failed:", err.message));
+    }
+  }
+  saveState();
+  const row = document.querySelector(`.project-row[data-project="${id}"]`);
+  if(row){
+    const chk = row.querySelector(".status-check");
+    if(chk) chk.className = `status-check ${status==="completed"?"completed":(status==="learning"?"learning":"")}`;
+  }
+  renderDashboard();
+}
+
+/* ============================= ACCOUNTS: HASH / AUTH / PROFILE ============================= */
+async function hashPassword(pw){
+  try{
+    const enc = new TextEncoder().encode(pw);
+    const buf = await crypto.subtle.digest("SHA-256", enc);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  }catch(e){
+    let h = 0;
+    for(let i=0;i<pw.length;i++){ h = (h*31 + pw.charCodeAt(i)) | 0; }
+    return "fallback_"+h;
+  }
+}
+function emailKey(email){ return (email||"").trim().toLowerCase(); }
+function isValidEmail(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+function avatarColor(name){
+  const palette = ["var(--transit)","var(--beacon)","var(--teal)","var(--violet)","var(--rose)","var(--green)"];
+  let h=0; for(let i=0;i<(name||"").length;i++) h += name.charCodeAt(i);
+  return palette[h % palette.length];
+}
+function initialsOf(name){
+  return (name||"?").trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("").toUpperCase();
+}
+function showAuthError(msg){
+  const el = document.getElementById("authError");
+  el.textContent = msg;
+  el.classList.add("show");
+}
+function switchAuthTab(tab){
+  document.getElementById("authError").classList.remove("show");
+  document.getElementById("tabSignIn").classList.toggle("active", tab==="signin");
+  document.getElementById("tabSignUp").classList.toggle("active", tab==="signup");
+  document.getElementById("signInForm").style.display = tab==="signin" ? "block" : "none";
+  document.getElementById("signUpForm").style.display = tab==="signup" ? "block" : "none";
+}
+function openAuthModal(tab){
+  switchAuthTab(tab || "signin");
+  document.getElementById("signInForm").reset();
+  document.getElementById("signUpForm").reset();
+  document.getElementById("authError").classList.remove("show");
+  document.getElementById("authNote").textContent = SERVER_MODE
+    ? "Connected to your backend — accounts and progress sync there."
+    : "No backend detected — everything stays in this browser only (password is hashed, but there's no real recovery).";
+  document.getElementById("authModalOverlay").classList.add("open");
+}
+async function handleSignUp(e){
+  e.preventDefault();
+  const name = document.getElementById("suName").value.trim();
+  const email = emailKey(document.getElementById("suEmail").value);
+  const goal = document.getElementById("suGoal").value;
+  const pw = document.getElementById("suPassword").value;
+  const pw2 = document.getElementById("suPassword2").value;
+  if(!name || !email) return showAuthError("Please fill in your name and email.");
+  if(!isValidEmail(email)) return showAuthError("Enter a valid email address.");
+  if(pw.length < 6) return showAuthError("Password must be at least 6 characters.");
+  if(pw !== pw2) return showAuthError("Passwords do not match.");
+
+  if(SERVER_MODE){
+    try{
+      const guestBucket = JSON.parse(JSON.stringify(state.progress.guest || freshBucket()));
+      const data = await apiFetch("/auth/signup", { method:"POST", body:JSON.stringify({ name, email, password:pw, goal }) });
+      authToken = data.token;
+      localStorage.setItem("uiuxRoadmapAuthToken", authToken);
+      state.users[email] = data.user;
+      state.progress[email] = guestBucket;
+      try{ await apiFetch("/progress", { method:"PUT", body:JSON.stringify(guestBucket) }); }catch(e){}
+      state.currentUser = email;
+      saveState();
+      closeAllModals();
+      renderAccountChip();
+      renderAll();
+    }catch(err){
+      showAuthError(err.message || "Could not create account.");
+    }
+    return;
+  }
+
+  if(state.users[email]) return showAuthError("An account with that email already exists — sign in instead.");
+  const hash = await hashPassword(pw);
+  state.users[email] = { name, email, passwordHash:hash, joinDate:new Date().toISOString(), goal, bio:"" };
+  const guestBucket = state.progress.guest || freshBucket();
+  state.progress[email] = JSON.parse(JSON.stringify(guestBucket));
+  state.currentUser = email;
+  saveState();
+  closeAllModals();
+  renderAccountChip();
+  renderAll();
+}
+async function handleSignIn(e){
+  e.preventDefault();
+  const email = emailKey(document.getElementById("siEmail").value);
+  const pw = document.getElementById("siPassword").value;
+
+  if(SERVER_MODE){
+    try{
+      const data = await apiFetch("/auth/login", { method:"POST", body:JSON.stringify({ email, password:pw }) });
+      authToken = data.token;
+      localStorage.setItem("uiuxRoadmapAuthToken", authToken);
+      state.users[email] = data.user;
+      const bucket = await apiFetch("/progress");
+      state.progress[email] = bucket;
+      state.currentUser = email;
+      saveState();
+      closeAllModals();
+      renderAccountChip();
+      renderAll();
+    }catch(err){
+      showAuthError(err.message || "Could not sign in.");
+    }
+    return;
+  }
+
+  const user = state.users[email];
+  if(!user) return showAuthError("No account found with that email.");
+  const hash = await hashPassword(pw);
+  if(hash !== user.passwordHash) return showAuthError("Incorrect password.");
+  state.currentUser = email;
+  saveState();
+  closeAllModals();
+  renderAccountChip();
+  renderAll();
+}
+function signOut(){
+  state.currentUser = null;
+  authToken = null;
+  localStorage.removeItem("uiuxRoadmapAuthToken");
+  saveState();
+  renderAccountChip();
+  renderAll();
+}
+function renderAccountChip(){
+  const areas = [document.getElementById("accountArea"), document.getElementById("accountAreaMobile")].filter(Boolean);
+  areas.forEach(area=>{
+    if(state.currentUser && state.users[state.currentUser]){
+      const u = state.users[state.currentUser];
+      area.innerHTML = `<button class="avatar-chip" type="button"><span class="avatar-circle" style="background:${avatarColor(u.name)}">${initialsOf(u.name)}</span><span>${esc(u.name.split(" ")[0])}</span></button>`;
+      area.querySelector("button").addEventListener("click", openProfileModal);
+    }else{
+      area.innerHTML = `<button class="btn btn-ghost" type="button" style="padding:8px 16px; font-size:13.5px;">Sign in</button>`;
+      area.querySelector("button").addEventListener("click", ()=>openAuthModal("signin"));
+    }
+  });
+}
+function computeStreak(activity){
+  const days = new Set((activity||[]).map(a=>a.date.slice(0,10)));
+  let streak = 0;
+  const d = new Date();
+  const todayStr = d.toISOString().slice(0,10);
+  if(!days.has(todayStr)) d.setDate(d.getDate()-1);
+  while(days.has(d.toISOString().slice(0,10))){ streak++; d.setDate(d.getDate()-1); }
+  return streak;
+}
+function relativeDate(iso){
+  const d = new Date(iso);
+  const dayMs = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const nowD = new Date();
+  const todayMs = new Date(nowD.getFullYear(), nowD.getMonth(), nowD.getDate()).getTime();
+  const diffDays = Math.round((todayMs - dayMs)/86400000);
+  if(diffDays===0) return "Today";
+  if(diffDays===1) return "Yesterday";
+  if(diffDays<7) return diffDays+" days ago";
+  return d.toLocaleDateString(undefined, {month:"short", day:"numeric"});
+}
+function openProfileModal(){
+  if(!state.currentUser){ openAuthModal("signin"); return; }
+  const u = state.users[state.currentUser];
+  if(!u){ signOut(); return; }
+  const bucket = getActiveBucket();
+  const phasesDone = PHASES.filter(p=>bucket.phases[p.id]==="completed").length;
+  const projectsDone = PROJECTS.filter(p=>bucket.projects[p.id]==="completed").length;
+  const techDone = TECH.filter(t=>bucket.tech[t.name]==="completed").length;
+  const streak = computeStreak(bucket.activity);
+  const joined = new Date(u.joinDate).toLocaleDateString(undefined, {month:"long", year:"numeric"});
+  const el = document.getElementById("profileModal");
+  el.innerHTML = `
+    <button class="modal-close" data-close>✕</button>
+    <div class="profile-header">
+      <span class="avatar-circle lg" style="background:${avatarColor(u.name)}">${initialsOf(u.name)}</span>
+      <div class="info">
+        <h3>${esc(u.name)}</h3>
+        <div class="email">${esc(u.email)}</div>
+        <div class="since">Member since ${joined}</div>
+      </div>
+      ${streak>0 ? `<span class="streak-badge">🔥 ${streak}-day streak</span>` : ""}
+    </div>
+
+    <div class="profile-stats">
+      <div class="profile-stat"><b>${phasesDone}/${PHASES.length}</b><span>Phases done</span></div>
+      <div class="profile-stat"><b>${projectsDone}/${PROJECTS.length}</b><span>Projects shipped</span></div>
+      <div class="profile-stat"><b>${techDone}</b><span>Tech learned</span></div>
+      <div class="profile-stat"><b>${PHASES.length ? Math.round((phasesDone/PHASES.length)*100) : 0}%</b><span>Overall progress</span></div>
+    </div>
+
+    <form id="profileEditForm">
+      <div class="field"><label for="pfName">Name</label><input type="text" id="pfName" value="${esc(u.name)}"></div>
+      <div class="field"><label for="pfGoal">Learning goal</label>
+        <select id="pfGoal">
+          <option value="">Not sure yet</option>
+          ${CAREERS.map(c=>`<option value="${esc(c.title)}" ${u.goal===c.title?"selected":""}>${esc(c.title)}</option>`).join("")}
+        </select>
+      </div>
+      <div class="field"><label for="pfBio">Bio</label><textarea id="pfBio" placeholder="A line about where you're starting from…">${esc(u.bio||"")}</textarea></div>
+      <button type="submit" class="btn btn-primary">Save changes</button>
+    </form>
+
+    <div class="modal-block">
+      <h5>LEARNING ACTIVITY</h5>
+      <div class="activity-list">
+        ${(bucket.activity && bucket.activity.length) ? bucket.activity.slice(0,30).map(a=>`
+          <div class="activity-row">
+            <span class="activity-dot" style="background:${a.status==='completed'?'var(--green)':'var(--beacon)'}"></span>
+            <span class="a-label">${esc(a.name)} <span style="color:var(--text-muted);">— ${a.status==='completed'?'completed':'started learning'}</span></span>
+            <span class="a-date">${relativeDate(a.date)}</span>
+          </div>
+        `).join("") : `<p style="font-size:13.5px; color:var(--text-muted);">Nothing tracked yet — mark a phase, tool, or project as you go.</p>`}
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <button class="btn btn-ghost" type="button" id="signOutBtn">Sign out</button>
+    </div>
+  `;
+  el.querySelector("[data-close]").addEventListener("click", closeAllModals);
+  el.querySelector("#profileEditForm").addEventListener("submit", (e)=>{
+    e.preventDefault();
+    u.name = document.getElementById("pfName").value.trim() || u.name;
+    u.goal = document.getElementById("pfGoal").value;
+    u.bio = document.getElementById("pfBio").value.trim();
+    saveState();
+    renderAccountChip();
+    openProfileModal();
+    if(isServerSession()){
+      apiFetch("/profile", { method:"PATCH", body:JSON.stringify({ name:u.name, goal:u.goal, bio:u.bio }) }).catch(err=>console.warn("Sync failed:", err.message));
+    }
+  });
+  el.querySelector("#signOutBtn").addEventListener("click", ()=>{ signOut(); closeAllModals(); });
+  document.getElementById("profileModalOverlay").classList.add("open");
+}
+function populateGoalSelect(){
+  const sel = document.getElementById("suGoal");
+  CAREERS.forEach(c=>{
+    const opt = document.createElement("option");
+    opt.value = c.title; opt.textContent = c.title;
+    sel.appendChild(opt);
+  });
+}
+function initAuthUI(){
+  populateGoalSelect();
+  document.getElementById("tabSignIn").addEventListener("click", ()=>switchAuthTab("signin"));
+  document.getElementById("tabSignUp").addEventListener("click", ()=>switchAuthTab("signup"));
+  document.getElementById("gotoSignUp").addEventListener("click", ()=>switchAuthTab("signup"));
+  document.getElementById("gotoSignIn").addEventListener("click", ()=>switchAuthTab("signin"));
+  document.getElementById("signInForm").addEventListener("submit", handleSignIn);
+  document.getElementById("signUpForm").addEventListener("submit", handleSignUp);
+  document.getElementById("authClose").addEventListener("click", closeAllModals);
+}
+
+/* ============================= CELEBRATION (confetti burst) ============================= */
+function celebrate(evt){
+  if(REDUCED_MOTION) return;
+  const x = evt ? evt.clientX : window.innerWidth/2;
+  const y = evt ? evt.clientY : window.innerHeight/2;
+  const colors = ["#3b5bdb","#e8a33d","#2bb3a3","#8b5fbf","#4c9f70","#e2574c"];
+  for(let i=0;i<18;i++){
+    const p = document.createElement("div");
+    p.className = "confetti-piece";
+    p.style.left = x+"px"; p.style.top = y+"px";
+    p.style.background = colors[i % colors.length];
+    const angle = (Math.PI*2*i)/18 + Math.random()*0.4;
+    const dist = 60 + Math.random()*70;
+    const dx = Math.cos(angle)*dist, dy = Math.sin(angle)*dist;
+    document.body.appendChild(p);
+    p.animate([
+      { transform:"translate(0,0) rotate(0deg)", opacity:1 },
+      { transform:`translate(${dx}px, ${dy}px) rotate(${360+Math.random()*180}deg)`, opacity:0 }
+    ], { duration:700+Math.random()*300, easing:"cubic-bezier(.2,.8,.3,1)" }).onfinish = ()=>p.remove();
+  }
+}
+
+/* ============================= THEME ============================= */
+function applyTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  state.theme = t; saveState();
+}
+(function initTheme(){
+  const preferred = state.theme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  applyTheme(preferred);
+})();
+document.getElementById("themeToggle").addEventListener("click", function(e){
+  const cur = document.documentElement.getAttribute("data-theme");
+  const next = cur === "dark" ? "light" : "dark";
+  if(!REDUCED_MOTION){
+    const rect = e.currentTarget.getBoundingClientRect();
+    const wash = document.createElement("div");
+    wash.className = "theme-wash";
+    const size = Math.hypot(window.innerWidth, window.innerHeight) * 2;
+    wash.style.width = size+"px"; wash.style.height = size+"px";
+    wash.style.left = (rect.left+rect.width/2 - size/2)+"px";
+    wash.style.top = (rect.top+rect.height/2 - size/2)+"px";
+    document.body.appendChild(wash);
+    requestAnimationFrame(()=>wash.classList.add("animate"));
+    setTimeout(()=>wash.remove(), 600);
+  }
+  applyTheme(next);
+});
+
+/* ============================= MOBILE NAV ============================= */
+const hamburgerBtn = document.getElementById("hamburgerBtn");
+const mobilePanel = document.getElementById("mobilePanel");
+hamburgerBtn.addEventListener("click", function(){
+  const open = mobilePanel.classList.toggle("open");
+  hamburgerBtn.setAttribute("aria-expanded", open ? "true":"false");
+});
+mobilePanel.querySelectorAll("a").forEach(a=>a.addEventListener("click", ()=>mobilePanel.classList.remove("open")));
+
+/* ============================= HELPERS ============================= */
+function esc(s){ return (s||"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function trackColor(track){ return TRACKS[track].color; }
+
+/* ============================= RIPPLE + TILT (delegated) ============================= */
+document.addEventListener("click", function(e){
+  const el = e.target.closest(".btn, .status-btn, .time-select button, .chip-filter");
+  if(!el) return;
+  if(REDUCED_MOTION) return;
+  const rect = el.getBoundingClientRect();
+  const ripple = document.createElement("span");
+  const size = Math.max(rect.width, rect.height) * 1.4;
+  ripple.className = "ripple";
+  ripple.style.width = ripple.style.height = size+"px";
+  ripple.style.left = (e.clientX - rect.left - size/2)+"px";
+  ripple.style.top = (e.clientY - rect.top - size/2)+"px";
+  el.appendChild(ripple);
+  setTimeout(()=>ripple.remove(), 650);
+});
+
+const TILT_SELECTOR = ".tilt, .tech-card, .project-row, .audience-card, .skill-cat-card, .career-card";
+let tiltBoundGlobal = false;
+function attachTilt(){
+  if(REDUCED_MOTION || tiltBoundGlobal) return;
+  tiltBoundGlobal = true;
+  let activeCard = null;
+  let activeRect = null;
+  let tiltRaf = 0;
+  let lastX = 0, lastY = 0;
+
+  function applyTiltFrame(){
+    tiltRaf = 0;
+    if(!activeCard || !activeRect) return;
+    const px = (lastX - activeRect.left) / activeRect.width - 0.5;
+    const py = (lastY - activeRect.top) / activeRect.height - 0.5;
+    activeCard.style.transform = `perspective(700px) rotateX(${(-py*5).toFixed(2)}deg) rotateY(${(px*5).toFixed(2)}deg) translateY(-4px)`;
+  }
+
+  document.addEventListener("mouseover", e=>{
+    const card = e.target.closest(TILT_SELECTOR);
+    if(card === activeCard) return;
+    if(activeCard){
+      activeCard.classList.remove("tilting");
+      activeCard.style.transform = "";
+    }
+    activeCard = card;
+    if(activeCard){
+      activeRect = activeCard.getBoundingClientRect();
+      activeCard.classList.add("tilting");
+    }else{
+      activeRect = null;
+    }
+  }, {passive:true});
+
+  document.addEventListener("mousemove", e=>{
+    if(!activeCard) return;
+    lastX = e.clientX; lastY = e.clientY;
+    if(!tiltRaf) tiltRaf = requestAnimationFrame(applyTiltFrame);
+  }, {passive:true});
+
+  window.addEventListener("scroll", ()=>{
+    if(activeCard) activeRect = activeCard.getBoundingClientRect();
+  }, {passive:true});
+}
+
+/* ============================= SCROLL REVEAL ============================= */
+let revealObserver;
+function initRevealObserver(){
+  if(revealObserver) return revealObserver;
+  revealObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("in-view");
+        revealObserver.unobserve(entry.target);
+        if(entry.target.style.transitionDelay){
+          setTimeout(()=>{ entry.target.style.transitionDelay = "0ms"; }, 620);
+        }
+      }
+    });
+  }, { threshold:0.01, rootMargin:"80px 0px" });
+  return revealObserver;
+}
+function observeReveals(container){
+  const obs = initRevealObserver();
+  const vh = window.innerHeight;
+  container.querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-scale").forEach(el=>{
+    if(REDUCED_MOTION){ el.classList.add("in-view"); return; }
+    const r = el.getBoundingClientRect();
+    if(r.top < vh + 60){
+      el.classList.add("in-view");
+      if(el.style.transitionDelay) setTimeout(()=>{ el.style.transitionDelay = "0ms"; }, 620);
+      return;
+    }
+    obs.observe(el);
+  });
+}
+
+/* ============================= RENDER: LEGEND ============================= */
+function renderLegend(){
+  const el = document.getElementById("trackLegend");
+  el.innerHTML = Object.entries(TRACKS).map(([k,t])=>
+    `<div class="leg" style="color:${t.color}"><span class="dot" style="background:${t.color}"></span><span style="color:var(--text-muted)">${t.label}</span></div>`
+  ).join("");
+}
+
+/* ============================= RENDER: ROADMAP ============================= */
+function renderRoadmap(){
+  const el = document.getElementById("roadmapList");
+  const grouped = {};
+  PHASES.forEach(p=>{ (grouped[p.track] = grouped[p.track]||[]).push(p); });
+  let html = `<div class="route-line-fill" id="routeLineFill"></div>`;
+  let idx = 0;
+  Object.keys(TRACKS).forEach(trackKey=>{
+    const list = grouped[trackKey] || [];
+    if(!list.length) return;
+    html += `<div class="route-track-group"><div class="route-track-label">${TRACKS[trackKey].label.toUpperCase()}</div>`;
+    list.forEach(p=>{
+      const status = getPhaseStatus(p.id);
+      const side = idx % 2 === 0 ? "reveal-left" : "reveal-left";
+      html += `
+        <div class="station ${status==='completed'?'done':''} ${side}" style="--line-color:${TRACKS[p.track].color}; transition-delay:${(idx%6)*40}ms" data-phase="${p.id}" tabindex="0" role="button" aria-label="Open phase ${p.id}: ${esc(p.title)}">
+          <div class="station-card">
+            <div>
+              <div class="station-num mono">PHASE ${String(p.id).padStart(2,'0')} · ${esc(p.duration)}</div>
+              <div class="station-title">${esc(p.title)}</div>
+              <div class="station-desc">${esc(p.description)}</div>
+            </div>
+            <div class="station-right">
+              <span class="diff-tag">${esc(p.difficulty)}</span>
+              <span class="status-check ${status==='completed'?'completed':(status==='learning'?'learning':'')}"></span>
+            </div>
+          </div>
+        </div>`;
+      idx++;
+    });
+    html += `</div>`;
+  });
+  el.innerHTML = html;
+  el.querySelectorAll(".station").forEach(node=>{
+    node.addEventListener("click", ()=>openPhaseModal(parseInt(node.dataset.phase)));
+    node.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openPhaseModal(parseInt(node.dataset.phase)); }});
+  });
+  observeReveals(el);
+  attachTilt(el);
+  updateRouteLineFill();
+}
+
+let routeLineRaf = 0;
+function updateRouteLineFill(){
+  routeLineRaf = 0;
+  const wrap = document.getElementById("roadmapList");
+  const fill = document.getElementById("routeLineFill");
+  if(!wrap || !fill) return;
+  const rect = wrap.getBoundingClientRect();
+  const vh = window.innerHeight;
+  const total = rect.height;
+  let visible = vh*0.75 - rect.top;
+  visible = Math.max(0, Math.min(total, visible));
+  const ratio = total>0 ? (visible/total) : 0;
+  fill.style.transform = `scaleY(${ratio.toFixed(4)})`;
+}
+function scheduleRouteLineFill(){
+  if(!routeLineRaf) routeLineRaf = requestAnimationFrame(updateRouteLineFill);
+}
+window.addEventListener("scroll", scheduleRouteLineFill, {passive:true});
+window.addEventListener("resize", scheduleRouteLineFill, {passive:true});
+
+/* ============================= MODAL: PHASE ============================= */
+function openPhaseModal(id){
+  const p = PHASES.find(x=>x.id===id);
+  if(!p) return;
+  const status = getPhaseStatus(id);
+  const next = PHASES.find(x=>x.id===id+1);
+  const el = document.getElementById("phaseModal");
+  el.innerHTML = `
+    <button class="modal-close" data-close>✕</button>
+    <span class="pill" style="border-color:${trackColor(p.track)}; color:${trackColor(p.track)};">PHASE ${String(p.id).padStart(2,'0')}</span>
+    <h3 style="margin-top:12px;">${esc(p.title)}</h3>
+    <div class="modal-sub">${esc(TRACKS[p.track].label)} · ${esc(p.difficulty)} · ${esc(p.duration)}</div>
+    <p style="font-size:14.5px;">${esc(p.description)}</p>
+    <div class="modal-block"><h5>WHY IT MATTERS</h5><p style="font-size:14px; color:var(--text-muted);">${esc(p.why)}</p></div>
+    <div class="modal-block"><h5>SKILLS</h5><div class="modal-tags">${p.skills.map(s=>`<span>${esc(s)}</span>`).join("")}</div></div>
+    ${p.tools.length? `<div class="modal-block"><h5>TOOLS</h5><div class="modal-tags">${p.tools.map(s=>`<span>${esc(s)}</span>`).join("")}</div></div>`:""}
+    <div class="modal-block"><h5>PROJECT</h5><p style="font-size:14px;">${esc(p.project)}</p></div>
+    ${p.resources.length? `<div class="modal-block"><h5>RESOURCES</h5><ul>${p.resources.map(r=>`<li><a class="modal-link" href="${r.url}" target="_blank" rel="noopener">${esc(r.name)} ↗</a></li>`).join("")}</ul></div>`:""}
+    ${next? `<div class="modal-block"><h5>NEXT PHASE</h5><p style="font-size:14px;">${String(next.id).padStart(2,'0')} — ${esc(next.title)}</p></div>`:""}
+    <div class="modal-actions">
+      <button class="status-btn ${status==='not_started'?'active-ns':''}" data-status="not_started">Not started</button>
+      <button class="status-btn ${status==='learning'?'active-learning':''}" data-status="learning">Learning</button>
+      <button class="status-btn ${status==='completed'?'active-done':''}" data-status="completed">Mark complete</button>
+    </div>
+  `;
+  el.querySelectorAll("[data-status]").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{ setPhaseStatus(id, btn.dataset.status, e); openPhaseModal(id); });
+  });
+  el.querySelector("[data-close]").addEventListener("click", closeAllModals);
+  document.getElementById("phaseModalOverlay").classList.add("open");
+}
+
+/* ============================= RENDER: TECH STACK ============================= */
+let techCategoryFilter = "All";
+let techLevelFilter = "All";
+
+function renderTechFilters(){
+  const cats = ["All", ...Array.from(new Set(TECH.map(t=>t.cat)))];
+  const catEl = document.getElementById("filterCategory");
+  catEl.innerHTML = cats.map(c=>`<button class="chip-filter ${c===techCategoryFilter?'active':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join("");
+  catEl.querySelectorAll("button").forEach(b=>b.addEventListener("click", ()=>{ techCategoryFilter=b.dataset.cat; renderTechFilters(); renderTechGrid(); }));
+
+  const levels = [["All","All"],["essential","Essential"],["recommended","Recommended"],["advanced","Advanced"],["optional","Optional"]];
+  const lvlEl = document.getElementById("filterLevel");
+  lvlEl.innerHTML = levels.map(([k,l])=>`<button class="chip-filter ${k===techLevelFilter?'active':''}" data-lvl="${k}">${l}</button>`).join("");
+  lvlEl.querySelectorAll("button").forEach(b=>b.addEventListener("click", ()=>{ techLevelFilter=b.dataset.lvl; renderTechFilters(); renderTechGrid(); }));
+}
+
+function levelLabel(l){ return {essential:"Essential",recommended:"Recommended",advanced:"Advanced",optional:"Optional"}[l]; }
+function levelClass(l){ return "lvl-"+l; }
+
+const TECH_LOGOS = {
+  "Figma": {
+    color:"#F24E1E",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 2h3.5v6.5H8.5a3.25 3.25 0 0 1 0-6.5z" fill="#F24E1E"/><path d="M12 2h3.5a3.25 3.25 0 0 1 0 6.5H12V2z" fill="#FF7262"/><path d="M8.5 8.5H12V15H8.5a3.25 3.25 0 0 1 0-6.5z" fill="#A259FF"/><circle cx="15.25" cy="11.75" r="3.25" fill="#1ABCFE"/><path d="M8.5 15H12v3.25a3.25 3.25 0 1 1-3.5-3.25z" fill="#0ACF83"/></svg>`
+  },
+  "FigJam": {
+    color:"#9747FF",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5" fill="#9747FF"/><path d="M8 14.5c1.5-3.5 3-5 4.2-2 .9 2.2 2.2.8 3.8-3" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16.2" cy="9.2" r="1.4" fill="#FFD233"/></svg>`
+  },
+  "Photoshop": {
+    color:"#31A8FF",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="4.5" fill="#001E36" stroke="#31A8FF" stroke-width="1.4"/><path d="M6.8 16.5V7.6h3.3c1.9 0 3.1 1 3.1 2.8 0 1.9-1.3 2.9-3.2 2.9H8.6v3.2H6.8zm1.8-4.7h1.4c.9 0 1.4-.5 1.4-1.3 0-.9-.5-1.3-1.4-1.3H8.6v2.6zm7.6 4.9c-1.1 0-2-.4-2.5-.9l.7-1.2c.5.4 1.1.7 1.8.7.6 0 1-.2 1-.6s-.3-.6-1.2-.9c-1.3-.4-2-1-2-2.1 0-1.2 1-2.1 2.5-2.1.9 0 1.7.3 2.3.8l-.7 1.2c-.5-.4-1-.6-1.5-.6-.5 0-.8.2-.8.5 0 .4.3.5 1.2.8 1.4.5 2 1 2 2.2 0 1.3-1 2.2-2.8 2.2z" fill="#31A8FF"/></svg>`
+  },
+  "Illustrator": {
+    color:"#FF9A00",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="4.5" fill="#330000" stroke="#FF9A00" stroke-width="1.4"/><path d="M12.2 16.5l-.8-2.2H8.1l-.8 2.2H5.4l3.3-8.9h2.1l3.3 8.9h-1.9zm-3.6-3.7h2.3l-1.1-3.3h-.1l-1.1 3.3zm7.1 3.7V9.9h1.8v6.6h-1.8zm.9-7.6a1.05 1.05 0 1 1 0-2.1 1.05 1.05 0 0 1 0 2.1z" fill="#FF9A00"/></svg>`
+  },
+  "Framer": {
+    color:"#0055FF",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v6.5h-7L5 3z" fill="#00AAFF"/><path d="M5 9.5h7l7 6.5H5V9.5z" fill="#0055FF"/><path d="M5 16h7v6l-7-6z" fill="#0038CC"/></svg>`
+  },
+  "Sketch": {
+    color:"#FDB300",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6.5,3.5 17.5,3.5 22,9.5 12,21 2,9.5" fill="#FDB300"/><polygon points="6.5,3.5 12,9.5 17.5,3.5" fill="#FEEEB7"/><polygon points="6.5,3.5 2,9.5 12,9.5" fill="#FDD231"/><polygon points="17.5,3.5 12,9.5 22,9.5" fill="#FDD231"/><polygon points="2,9.5 12,21 7.2,9.5" fill="#EA6C00"/><polygon points="22,9.5 12,21 16.8,9.5" fill="#EA6C00"/><polygon points="7.2,9.5 12,21 16.8,9.5" fill="#FDAD00"/></svg>`
+  },
+  "Maze": {
+    color:"#0066FF",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 15.5c0-4.4 2.7-7 5.1-7 1.8 0 2.9 1.3 3.4 3 .5-1.7 1.6-3 3.4-3 2.4 0 5.1 2.6 5.1 7" fill="none" stroke="#0066FF" stroke-width="2.6" stroke-linecap="round"/><circle cx="12" cy="15.5" r="2" fill="#0066FF"/></svg>`
+  },
+  "Hotjar": {
+    color:"#FF3C00",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.8 3.5c-4.9 2.3-7.6 5.5-7.6 8.5 0 1.4.8 2.4 2 2.9-.1-1.3.7-2.6 2.7-3.7 1.7-.9 2.9-2.5 2.9-4.7V3.5z" fill="#FF3C00"/><path d="M7.2 20.5c4.9-2.3 7.6-5.5 7.6-8.5 0-1.4-.8-2.4-2-2.9.1 1.3-.7 2.6-2.7 3.7-1.7.9-2.9 2.5-2.9 4.7v3z" fill="#FF6B35"/></svg>`
+  },
+  "Microsoft Clarity": {
+    color:"#0078D4",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="#0078D4"/><path d="M6.5 13.5c1.6-3.2 3.3-4.6 5.5-4.6s3.9 1.4 5.5 4.6" fill="none" stroke="#50E6FF" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="13.5" r="2.2" fill="#fff"/></svg>`
+  },
+  "Google Analytics": {
+    color:"#E37400",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="15.5" y="3" width="4.5" height="18" rx="2.25" fill="#F9AB00"/><rect x="9.75" y="9" width="4.5" height="12" rx="2.25" fill="#E37400"/><circle cx="6.25" cy="18.75" r="2.25" fill="#E37400"/></svg>`
+  },
+  "Google Forms": {
+    color:"#7248B9",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.5h8l5 5V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20V4A1.5 1.5 0 0 1 6 2.5z" fill="#7248B9"/><path d="M14 2.5v5h5" fill="#B39DDB"/><circle cx="8.5" cy="11.5" r="1" fill="#fff"/><rect x="10.8" y="10.7" width="5.2" height="1.6" rx=".8" fill="#fff"/><circle cx="8.5" cy="15" r="1" fill="#fff"/><rect x="10.8" y="14.2" width="5.2" height="1.6" rx=".8" fill="#fff"/><circle cx="8.5" cy="18.5" r="1" fill="#fff"/><rect x="10.8" y="17.7" width="3.8" height="1.6" rx=".8" fill="#fff"/></svg>`
+  },
+  "Typeform": {
+    color:"#262627", darkColor:"#cbd5e1",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="8.8" cy="12" rx="4.2" ry="6.2" transform="rotate(-14 8.8 12)" fill="currentColor"/><rect x="14.5" y="6.2" width="5" height="11.6" rx="2.5" fill="currentColor"/></svg>`
+  },
+  "Notion": {
+    color:"#191919", darkColor:"#e2e8f0",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 5.4l10.2-.8c.8-.1 1.2.1 1.7.5l2.8 2c.4.3.5.5.5.9v11.1c0 .7-.3 1.1-1.1 1.2l-11.2.7c-.7 0-1-.1-1.4-.6L3.6 17c-.4-.5-.5-.9-.5-1.4V6.5c0-.6.3-1 1.4-1.1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 17.2V9.6h1.6l3.7 5.1V9.6h1.5v7.6h-1.6L10 12.1v5.1H8.5z" fill="currentColor"/></svg>`
+  },
+  "Figma Variables": {
+    color:"#A259FF",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4.5" fill="none" stroke="#A259FF" stroke-width="2"/><polygon points="12,6.2 17.8,12 12,17.8 6.2,12" fill="#A259FF"/><circle cx="12" cy="12" r="2.2" fill="#fff"/></svg>`
+  },
+  "Storybook": {
+    color:"#FF4785",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5l13.2-.8c.9-.1 1.6.6 1.6 1.5v15.6c0 .9-.7 1.6-1.6 1.6L5 20.6c-.8 0-1.4-.7-1.4-1.5V5c0-.8.6-1.5 1.4-1.5z" fill="#FF4785"/><path d="M15.2 2.8v3.6l1.1-.9 1.1.9V2.7" fill="#fff"/><path d="M14.3 9.7c0-.7-.6-1.1-1.6-1.1-1 0-1.6.4-1.6 1 0 .6.5.9 1.9 1.3 2 .5 2.9 1.2 2.9 2.7 0 1.7-1.4 2.8-3.5 2.8-2.2 0-3.6-1.1-3.6-2.9h2.2c0 .8.6 1.2 1.5 1.2 1 0 1.5-.4 1.5-1 0-.6-.4-.9-1.7-1.2-2.1-.5-3.1-1.2-3.1-2.8 0-1.6 1.3-2.7 3.4-2.7 2.1 0 3.4 1 3.4 2.7h-2z" fill="#fff"/></svg>`
+  },
+  "Tokens Studio": {
+    color:"#0066FF",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5.5" r="2.6" fill="#0066FF"/><circle cx="6.2" cy="12" r="2.6" fill="#6366F1"/><circle cx="17.8" cy="12" r="2.6" fill="#06B6D4"/><circle cx="12" cy="18.5" r="2.6" fill="#A855F7"/><path d="M12 8.2v7.6M8.8 12h6.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".55"/></svg>`
+  },
+  "Style Dictionary": {
+    color:"#FF9900",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 5.5A2.5 2.5 0 0 1 7 3h11.5v16H7a2.5 2.5 0 0 0-2.5 2.5V5.5z" fill="#FF9900"/><path d="M4.5 19A2.5 2.5 0 0 1 7 16.5h11.5V19H7a2.5 2.5 0 0 0-2.5 2.5V19z" fill="#FFB84D"/><path d="M8.5 7.5h7M8.5 10.8h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>`
+  },
+  "HTML": {
+    color:"#E34F26",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3l1.45 16.2L12 21l6.55-1.8L20 3H4z" fill="#E34F26"/><path d="M12 4.3v15.3l5.3-1.46L18.5 4.3H12z" fill="#EF652A"/><path d="M12 8.7H8.1l.2 2.2H12v2.1H6.5l.5 5.1 5 1.4v-2.2l-2.9-.8-.2-2h3.1v-2.1h3.6l-.3 3.4-3.3.9v2.2l5-1.4.6-6.9H12V8.7h4.2l.2-2.1H12v2.1z" fill="#fff"/></svg>`
+  },
+  "CSS": {
+    color:"#1572B6",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3l1.45 16.2L12 21l6.55-1.8L20 3H4z" fill="#1572B6"/><path d="M12 4.3v15.3l5.3-1.46L18.5 4.3H12z" fill="#33A9DC"/><path d="M7.2 6.6h9.6l-.25 2.1H12l-.05.2H16.3l-.55 6.3-3.75 1.05-3.75-1.05-.25-2.8h2.1l.13 1.35 1.77.5 1.77-.5.2-2.25H7.7l-.2-2.1h6.7l.15-1.1H7.45L7.2 6.6z" fill="#fff"/></svg>`
+  },
+  "JavaScript": {
+    color:"#EAB308",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="3.2" fill="#F7DF1E"/><path d="M12.9 16.8c.4.7.9 1.2 1.8 1.2.8 0 1.3-.4 1.3-1 0-.7-.5-.9-1.4-1.3l-.5-.2c-1.4-.6-2.3-1.3-2.3-2.9 0-1.4 1.1-2.5 2.8-2.5 1.2 0 2.1.4 2.7 1.6l-1.5.9c-.3-.6-.7-.8-1.2-.8-.6 0-.9.3-.9.8 0 .6.4.8 1.2 1.1l.5.2c1.6.7 2.6 1.4 2.6 3.1 0 1.8-1.4 2.8-3.3 2.8-1.8 0-3-.9-3.6-2l1.8-.8zm-6.1.2c.3.5.6.9 1.2.9.6 0 1-.2 1-1.2v-6.4h1.9v6.5c0 2-1.2 2.9-2.9 2.9-1.5 0-2.4-.8-2.9-1.7l1.7-1z" fill="#18181B"/></svg>`
+  },
+  "TypeScript": {
+    color:"#3178C6",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="3.2" fill="#3178C6"/><path d="M13.3 12.1H11v6.8H9.1v-6.8H6.8v-1.6h6.5v1.6zm2.5 5.2c.4.4 1 .7 1.7.7.7 0 1.2-.3 1.2-.8 0-.5-.4-.8-1.4-1.2-1.5-.5-2.3-1.2-2.3-2.5 0-1.4 1.1-2.4 2.8-2.4.9 0 1.7.2 2.3.7l-.7 1.4c-.5-.3-1-.5-1.5-.5-.6 0-1 .3-1 .7 0 .5.4.7 1.4 1.1 1.6.6 2.3 1.3 2.3 2.6 0 1.5-1.2 2.5-3 2.5-1.1 0-2-.3-2.6-.9l.8-1.4z" fill="#fff"/></svg>`
+  },
+  "React": {
+    color:"#08B2D8", darkColor:"#61DAFB",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2.1" fill="#08B2D8"/><g fill="none" stroke="#08B2D8" stroke-width="1.4"><ellipse cx="12" cy="12" rx="9.5" ry="3.8"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(120 12 12)"/></g></svg>`
+  },
+  "Next.js": {
+    color:"#111827", darkColor:"#e2e8f0",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="currentColor"/><path d="M8.8 16.2V7.8h1.5l5.9 7.8v-1.9L10.3 6.5H7.8v9.7h1zm6.4-8.4h1.3v6l-1.3-1.7V7.8z" fill="var(--surface)"/></svg>`
+  },
+  "Angular": {
+    color:"#DD0031",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5L3.2 5.6l1.4 11.7L12 21.5l7.4-4.2 1.4-11.7L12 2.5z" fill="#DD0031"/><path d="M12 2.5v19l7.4-4.2 1.4-11.7L12 2.5z" fill="#C3002F"/><path d="M12 5.2L6.9 16.6h1.9l1-2.5h4.4l1 2.5h1.9L12 5.2zm0 3.7l1.5 3.6h-3L12 8.9z" fill="#fff"/></svg>`
+  },
+  "Vue": {
+    color:"#41B883",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 4.5h3.8L12 14.3 17.7 4.5h3.8L12 21 2.5 4.5z" fill="#41B883"/><path d="M6.3 4.5h3.5L12 8.4l2.2-3.9h3.5L12 14.3 6.3 4.5z" fill="#35495E"/></svg>`
+  },
+  "Tailwind CSS": {
+    color:"#06B6D4",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6c-2.67 0-4.33 1.33-5 4 1-1.33 2.17-1.83 3.5-1.5.76.19 1.3.74 1.9 1.35.98.99 2.12 2.15 4.6 2.15 2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-.76-.19-1.3-.74-1.9-1.35C15.62 7.16 14.48 6 12 6zM7 12c-2.67 0-4.33 1.33-5 4 1-1.33 2.17-1.83 3.5-1.5.76.19 1.3.74 1.9 1.35.98.99 2.12 2.15 4.6 2.15 2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-.76-.19-1.3-.74-1.9-1.35C10.62 13.16 9.48 12 7 12z" fill="#06B6D4"/></svg>`
+  },
+  "shadcn/ui": {
+    color:"#18181B", darkColor:"#e4e4e7",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><line x1="19" y1="5" x2="5" y2="19" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><line x1="19" y1="12.5" x2="12.5" y2="19" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`
+  },
+  "Radix UI": {
+    color:"#18181B", darkColor:"#e4e4e7",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="6.5" height="6.5" fill="currentColor"/><circle cx="7.25" cy="17.75" r="3.25" fill="currentColor"/><path d="M13 3h4.2a3.3 3.3 0 0 1 0 6.6H13V3z" fill="currentColor"/></svg>`
+  },
+  "Material UI": {
+    color:"#007FFF",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 5.2v9.1l3 1.7v-5.7l4.5 2.6 4.5-2.6v3.7l-3 1.7v3.4l3 1.7 7-4V9l-3-1.7v6l-4 2.3-4-2.3V8l7-4-3-1.7-7 4-3-1.7-3 1.7z" fill="#007FFF"/><path d="M18.5 5.5v3.2l3-1.7V3.8l-3 1.7z" fill="#0059B2"/></svg>`
+  },
+  "Ant Design": {
+    color:"#1677FF",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l7.6 7.6a1.7 1.7 0 0 1 0 2.4l-2.4 2.4a1.2 1.2 0 0 1-1.7-1.7l2-2-5.5-5.5-5.5 5.5 5.5 5.5 1.8-1.8a1.2 1.2 0 1 1 1.7 1.7l-2.3 2.3a1.7 1.7 0 0 1-2.4 0L4.4 13.2a1.7 1.7 0 0 1 0-2.4L12 3.2z" fill="#1677FF"/><circle cx="12" cy="12" r="2.1" fill="#F5222D"/></svg>`
+  },
+  "Chakra UI": {
+    color:"#319795",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#319795"/><path d="M13.2 5.8L7.5 12.6h4.2l-.9 5.6 5.7-6.8h-4.2l.9-5.6z" fill="#fff"/></svg>`
+  },
+  "Zustand": {
+    color:"#A66838",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6.5" cy="7.5" r="2.6" fill="#8B5A2B"/><circle cx="17.5" cy="7.5" r="2.6" fill="#8B5A2B"/><circle cx="12" cy="13" r="6.8" fill="#B67740"/><ellipse cx="12" cy="15.2" rx="3.4" ry="2.4" fill="#F3D9B1"/><circle cx="9.6" cy="11.6" r="1" fill="#1F160F"/><circle cx="14.4" cy="11.6" r="1" fill="#1F160F"/><ellipse cx="12" cy="14.3" rx="1.2" ry=".85" fill="#1F160F"/></svg>`
+  },
+  "Redux Toolkit": {
+    color:"#764ABC",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.8 14.8c1.5-2.6 1.1-6.5-.9-8.8-1.3-1.5-3.2-1.8-4.4-.7" fill="none" stroke="#764ABC" stroke-width="1.6" stroke-linecap="round"/><path d="M8.5 10.2c-2.6 1.5-4.3 4.8-3.5 7.4.6 1.9 2.3 2.9 4.1 2.5" fill="none" stroke="#764ABC" stroke-width="1.6" stroke-linecap="round"/><path d="M10.4 17.7c3 .9 6.6-.2 8.1-2.5 1.1-1.7.7-3.6-.7-4.7" fill="none" stroke="#764ABC" stroke-width="1.6" stroke-linecap="round"/><circle cx="15.4" cy="15.1" r="1.4" fill="#764ABC"/><circle cx="8.8" cy="15.1" r="1.4" fill="#764ABC"/><circle cx="12" cy="9.2" r="1.4" fill="#764ABC"/></svg>`
+  },
+  "TanStack Query": {
+    color:"#FF4154",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="#FF4154"/><circle cx="12" cy="12" r="5.5" fill="#FBBF24"/><path d="M4.5 15.5c2.2-1.8 4.8-2.4 7.5-1.5s5.1.3 7.5-1.5A8.9 8.9 0 0 1 12 21a8.9 8.9 0 0 1-7.5-5.5z" fill="#0EA5E9"/></svg>`
+  },
+  "Node.js": {
+    color:"#5FA04E",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l8.2 4.75v9.5L12 21.5l-8.2-4.75v-9.5L12 2.5z" fill="#5FA04E"/><path d="M12 7.5l4.2 2.4v4.8L12 17.1l-4.2-2.4V9.9L12 7.5z" fill="#fff" opacity=".28"/><path d="M12 6.8v10.4M7.8 9.2l8.4 4.8" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>`
+  },
+  "Express.js": {
+    color:"#222222", darkColor:"#e2e8f0",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 12.2c0-2.6 1.7-4.5 4-4.5 2.4 0 3.7 1.8 3.7 4.3v.6H4.9c.2 1.6 1.1 2.6 2.5 2.6 1 0 1.8-.4 2.3-1.1l1.1.9c-.8 1-1.9 1.6-3.4 1.6-2.5 0-4.2-1.8-4.2-4.4zm1.8-.9h4.2c-.1-1.4-.9-2.3-2-2.3-1.2 0-2 .9-2.2 2.3zm7.4 5l3-4.3-2.8-4h1.9l1.9 2.8 1.9-2.8h1.8l-2.8 4 3 4.3h-1.9l-2.1-3.1-2.1 3.1h-1.8z" fill="currentColor"/></svg>`
+  },
+  "Firebase": {
+    color:"#FFA000",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 17.8L7.6 3.5c.1-.6.9-.7 1.2-.2l2.6 4.9-6.2 9.6z" fill="#FFA000"/><path d="M5.2 17.8l9.8-9.2 1.9-3.6c.3-.6 1.1-.5 1.2.1l1.7 12.7-7.4 4.2c-.3.2-.6.2-.9 0l-6.3-4.2z" fill="#FFCA28"/><path d="M5.2 17.8l6.2-5.8 2.4 4.5-6.8 2.5-1.8-1.2z" fill="#F57C00"/></svg>`
+  },
+  "Supabase": {
+    color:"#3ECF8E",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.3 20.6c-.5.6-1.5.3-1.5-.5v-7.4h7.1c1 0 1.6 1.2 1 2l-6.6 5.9z" fill="#3ECF8E"/><path d="M10.7 3.4c.5-.6 1.5-.3 1.5.5v7.4H5.1c-1 0-1.6-1.2-1-2l6.6-5.9z" fill="#249361"/></svg>`
+  },
+  "Postman": {
+    color:"#FF6C37",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#FF6C37"/><path d="M8 14.5l5.8-5.8 1.9 1.9-5.8 5.8-2.6.7.7-2.6z" fill="#fff"/><circle cx="15.3" cy="8.7" r="1.2" fill="#FF6C37"/></svg>`
+  },
+  "Swagger/OpenAPI": {
+    color:"#67B821", darkColor:"#85EA2D",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#85EA2D"/><path d="M9 7.8c-1.1 0-1.5.5-1.5 1.4v1.4c0 .7-.4 1.1-1 1.4.6.3 1 .7 1 1.4v1.4c0 .9.4 1.4 1.5 1.4m6-8.4c1.1 0 1.5.5 1.5 1.4v1.4c0 .7.4 1.1 1 1.4-.6.3-1 .7-1 1.4v1.4c0 .9-.4 1.4-1.5 1.4" fill="none" stroke="#173647" stroke-width="1.8" stroke-linecap="round"/><circle cx="9.8" cy="12" r=".9" fill="#173647"/><circle cx="12" cy="12" r=".9" fill="#173647"/><circle cx="14.2" cy="12" r=".9" fill="#173647"/></svg>`
+  },
+  "VS Code": {
+    color:"#007ACC",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.2 3.2L8.4 11.4 4.6 8.5 3 9.4v5.2l1.6.9 3.8-2.9 8.8 8.2 3.8-1.8V5l-3.8-1.8zM17.2 8.2v7.6L12 12l5.2-3.8z" fill="#007ACC"/></svg>`
+  },
+  "Cursor": {
+    color:"#18181B", darkColor:"#e4e4e7",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2.5 20.2,7.25 20.2,16.75 12,21.5 3.8,16.75 3.8,7.25" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><polygon points="9.5,8 17,12 12.6,13.4 11.2,17.8" fill="currentColor"/></svg>`
+  },
+  "Chrome DevTools": {
+    color:"#4285F4",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#4285F4"/><path d="M12 2.5a9.5 9.5 0 0 1 8.2 4.7H12v4.8L6.8 4A9.4 9.4 0 0 1 12 2.5z" fill="#EA4335"/><path d="M3.8 7.2A9.5 9.5 0 0 0 11 21.4l3.8-6.6-2.8-2.8-5.2-4.8z" fill="#34A853"/><path d="M12 7.2h8.2a9.5 9.5 0 0 1-9.2 14.2l3.8-6.6A4.8 4.8 0 0 0 12 7.2z" fill="#FBBC05"/><circle cx="12" cy="12" r="4.3" fill="#fff"/><circle cx="12" cy="12" r="3.1" fill="#4285F4"/></svg>`
+  },
+  "Vite": {
+    color:"#646CFF",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 5.2L12.5 20.4a.6.6 0 0 1-1 0L3 5.2c-.3-.5.2-1.1.7-.9l8.3 2.8c.2.1.4.1.6 0l8.1-2.8c.5-.2 1 .4.3.9z" fill="#646CFF"/><path d="M16 3.5l-5.6 1.1c-.2 0-.4.2-.4.5l-.4 6.2c0 .3.3.5.6.4l1.6-.4c.3-.1.6.2.5.5l-.5 2.4c-.1.3.2.6.5.5l1-.3c.3-.1.6.2.5.5l-.7 3.6c-.1.4.4.6.6.3l5.3-8.6c.2-.3-.1-.7-.5-.6l-1.7.3c-.3.1-.6-.2-.5-.5l1.1-4.8c.1-.3-.2-.6-.6-.5z" fill="#FFDD35"/></svg>`
+  },
+  "Git": {
+    color:"#F05032",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="4.5" width="15" height="15" rx="2.5" transform="rotate(45 12 12)" fill="#F05032"/><path d="M9.5 6.8l5.2 5.2M12 9.3v5.4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="9.3" r="1.5" fill="#fff"/><circle cx="12" cy="14.7" r="1.5" fill="#fff"/><circle cx="14.7" cy="12" r="1.5" fill="#fff"/></svg>`
+  },
+  "GitHub": {
+    color:"#181717", darkColor:"#e6edf3",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M12 2.5C6.48 2.5 2 7.03 2 12.62c0 4.47 2.87 8.26 6.84 9.6.5.09.68-.22.68-.49 0-.24-.01-1.04-.01-1.89-2.78.61-3.37-1.2-3.37-1.2-.45-1.17-1.11-1.48-1.11-1.48-.91-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.55 2.34 1.1 2.91.84.09-.65.35-1.1.63-1.35-2.22-.25-4.56-1.12-4.56-4.99 0-1.1.39-2 1.03-2.7-.1-.26-.45-1.29.1-2.68 0 0 .84-.27 2.75 1.03A9.4 9.4 0 0 1 12 7.45c.85 0 1.71.12 2.5.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.39.2 2.42.1 2.68.64.7 1.03 1.6 1.03 2.7 0 3.88-2.34 4.73-4.57 4.98.36.31.68.93.68 1.87 0 1.35-.01 2.44-.01 2.77 0 .27.18.59.69.49A10.12 10.12 0 0 0 22 12.62C22 7.03 17.52 2.5 12 2.5z"/></svg>`
+  },
+  "Vitest": {
+    color:"#6E9F18",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6.5l8.5 14 8.5-14-3.2 1.2L12 16 6.7 7.7 3.5 6.5z" fill="#729B1B"/><path d="M13.3 4l-3.6 5.8h2.8l-1.3 4.7 4.3-6.1h-2.8L13.3 4z" fill="#FCC72B"/></svg>`
+  },
+  "Playwright": {
+    color:"#2EAD33",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5.5c2.4-.9 5.3-.9 7.7 0v5.3c0 2.6-1.7 4.9-3.85 5.4-2.15-.5-3.85-2.8-3.85-5.4V5.5z" fill="#E2574C"/><path d="M12.8 7.8c2.4-.9 5.3-.9 7.7 0v5.3c0 2.6-1.7 4.9-3.85 5.4-2.15-.5-3.85-2.8-3.85-5.4V7.8z" fill="#2EAD33"/><circle cx="6.2" cy="9.2" r=".8" fill="#fff"/><circle cx="8.6" cy="9.2" r=".8" fill="#fff"/><path d="M15.2 13.8c.8.8 2.1.8 2.9 0" fill="none" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg>`
+  },
+  "Cypress": {
+    color:"#1FA971", darkColor:"#69D3A7",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="none" stroke="#1FA971" stroke-width="2.2"/><path d="M10.8 14.3a2.5 2.5 0 1 1 0-4.6m2.2 0l1.8 4.4 1.7-4.4M14.8 14.1l-1.1 2.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+  },
+  "Lighthouse": {
+    color:"#F44B21",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l3 2.5v3.2H9V5.3l3-2.5z" fill="#FFAB40"/><path d="M9 8.5h6l1.3 11.7H7.7L9 8.5z" fill="#F44B21"/><path d="M8.4 13.5h7.2l.4 3.2H8l.4-3.2z" fill="#fff"/><path d="M6.2 20.2h11.6" stroke="#304FFE" stroke-width="2.2" stroke-linecap="round"/></svg>`
+  },
+  "axe DevTools": {
+    color:"#0077C8",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2.5 20.5,7.3 20.5,16.7 12,21.5 3.5,16.7 3.5,7.3" fill="#0077C8"/><path d="M12 7.2l-3.8 9h2l.8-2h2l.8 2h2l-3.8-9zm0 3.2l.7 2h-1.4l.7-2z" fill="#fff"/></svg>`
+  },
+  "WAVE": {
+    color:"#1D6FA5",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#1D6FA5"/><path d="M5.5 13c1.8-2.4 3.5-2.4 5 0s3.2 2.4 5 0 2.2-1.8 3-.5" fill="none" stroke="#67E8F9" stroke-width="2.2" stroke-linecap="round"/><path d="M6.5 9.5c1.5-1.8 3-1.8 4.4 0s2.8 1.8 4.4 0" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>`
+  },
+  "Vercel": {
+    color:"#111111", darkColor:"#f1f5f9",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,4 21,19.5 3,19.5" fill="currentColor"/></svg>`
+  },
+  "Netlify": {
+    color:"#00C7B7",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2.5 21.5,12 12,21.5 2.5,12" fill="#00C7B7"/><path d="M12 6.5v11M6.5 12h11M8.2 8.2l7.6 7.6" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>`
+  },
+  "Mixpanel": {
+    color:"#7856FF",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6.2" cy="12" r="2.7" fill="#7856FF"/><circle cx="12.6" cy="12" r="2" fill="#7856FF" opacity=".8"/><circle cx="18.2" cy="12" r="1.4" fill="#7856FF" opacity=".6"/></svg>`
+  },
+  "PostHog": {
+    color:"#F54E00",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15.5c0-4.4 3.6-8 8-8 4.4 0 8 3.6 8 8H4z" fill="#F54E00"/><path d="M7.5 15.5a4.5 4.5 0 0 1 9 0h-9z" fill="#1D4AFF"/><circle cx="15.2" cy="11.5" r="1.3" fill="#F9BD2B"/></svg>`
+  },
+  "Notion (PM)": {
+    color:"#191919", darkColor:"#e2e8f0",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 5.4l10.2-.8c.8-.1 1.2.1 1.7.5l2.8 2c.4.3.5.5.5.9v11.1c0 .7-.3 1.1-1.1 1.2l-11.2.7c-.7 0-1-.1-1.4-.6L3.6 17c-.4-.5-.5-.9-.5-1.4V6.5c0-.6.3-1 1.4-1.1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 17.2V9.6h1.6l3.7 5.1V9.6h1.5v7.6h-1.6L10 12.1v5.1H8.5z" fill="currentColor"/></svg>`
+  },
+  "Linear": {
+    color:"#5E6AD2",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="#5E6AD2"/><path d="M5.2 14.2l4.6 4.6M4.2 10.6l9.2 9.2M6.2 7.2l10.6 10.6" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>`
+  },
+  "Slack": {
+    color:"#E01E5A",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="10.2" y="3" width="2.2" height="6.8" rx="1.1" fill="#36C5F0"/><rect x="3" y="10.2" width="6.8" height="2.2" rx="1.1" fill="#36C5F0"/><rect x="13.8" y="3" width="2.2" height="6.8" rx="1.1" fill="#2EB67D"/><rect x="14.2" y="10.2" width="6.8" height="2.2" rx="1.1" fill="#2EB67D"/><rect x="10.2" y="14.2" width="2.2" height="6.8" rx="1.1" fill="#E01E5A"/><rect x="3" y="11.6" width="6.8" height="2.2" rx="1.1" fill="#E01E5A"/><rect x="13.8" y="14.2" width="2.2" height="6.8" rx="1.1" fill="#ECB22E"/><rect x="14.2" y="11.6" width="6.8" height="2.2" rx="1.1" fill="#ECB22E"/></svg>`
+  },
+  "Claude": {
+    color:"#D97757",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="#D97757" stroke-width="2" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="5.6" y1="5.6" x2="18.4" y2="18.4"/><line x1="18.4" y1="5.6" x2="5.6" y2="18.4"/><line x1="8.6" y1="3.8" x2="15.4" y2="20.2"/><line x1="20.2" y1="8.6" x2="3.8" y2="15.4"/></g></svg>`
+  },
+  "GitHub Copilot": {
+    color:"#24292F", darkColor:"#e6edf3",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 11.2c0-3.3 2.9-5.7 6.5-5.7s6.5 2.4 6.5 5.7v4.4c0 1.4-1.1 2.4-2.5 2.4H8c-1.4 0-2.5-1-2.5-2.4v-4.4z" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="7.5" y="10" width="9" height="4.8" rx="2" fill="currentColor"/><line x1="10.2" y1="11.6" x2="10.2" y2="13.2" stroke="var(--surface)" stroke-width="1.5" stroke-linecap="round"/><line x1="13.8" y1="11.6" x2="13.8" y2="13.2" stroke="var(--surface)" stroke-width="1.5" stroke-linecap="round"/></svg>`
+  },
+  "Figma AI": {
+    color:"#A259FF",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3v5.5H7A2.75 2.75 0 0 1 7 4z" fill="#F24E1E"/><path d="M10 4h3a2.75 2.75 0 0 1 0 5.5h-3V4z" fill="#FF7262"/><path d="M7 9.5h3V15H7a2.75 2.75 0 0 1 0-5.5z" fill="#A259FF"/><path d="M7 15h3v2.75A2.75 2.75 0 1 1 7 15z" fill="#0ACF83"/><path d="M16.8 10.5l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9.9-2.3z" fill="#A259FF"/></svg>`
+  },
+  "UI / UX": {
+    color:"#2bb3a3",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3" fill="none" stroke="#2bb3a3" stroke-width="2"/><path d="M3.5 9.5h17M9.5 9.5v10" stroke="#2bb3a3" stroke-width="2"/></svg>`
+  },
+  "APIs": {
+    color:"#FF6C37",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7l-4 5 4 5M16 7l4 5-4 5M13.5 5.5l-3 13" fill="none" stroke="#FF6C37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+  },
+  "Accessibility": {
+    color:"#3b5bdb",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5.5" r="2" fill="#3b5bdb"/><path d="M5 9.5h14M12 9.5v5.2l-3 5.3M12 14.7l3 5.3" fill="none" stroke="#3b5bdb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+  },
+  "Testing": {
+    color:"#2EAD33",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3.5h6M10.5 3.5v5.2L5.5 18a1.5 1.5 0 0 0 1.3 2.2h10.4a1.5 1.5 0 0 0 1.3-2.2l-5-9.3V3.5" fill="none" stroke="#2EAD33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+  },
+  "Performance": {
+    color:"#F44B21",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 15.5a8 8 0 1 1 15 0" fill="none" stroke="#F44B21" stroke-width="2" stroke-linecap="round"/><path d="M12 13.5l4-4" stroke="#F44B21" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="14" r="1.5" fill="#F44B21"/></svg>`
+  },
+  "Deployment": {
+    color:"#00C7B7",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l6.5 6.5h-4v7h-5v-7h-4L12 3.5z" fill="#00C7B7"/><path d="M5 20.5h14" stroke="#00C7B7" stroke-width="2" stroke-linecap="round"/></svg>`
+  }
+};
+
+function techBrand(name){
+  return TECH_LOGOS[name] || {
+    color:"#3b5bdb",
+    svg:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="currentColor" opacity=".2"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>`
+  };
+}
+function techColorStyle(brand){
+  return `--tc:${brand.color};${brand.darkColor ? ` --tc-dark:${brand.darkColor};` : ""}`;
+}
+
+function renderTechGrid(){
+  const el = document.getElementById("techGrid");
+  const list = TECH.filter(t => (techCategoryFilter==="All"||t.cat===techCategoryFilter) && (techLevelFilter==="All"||t.level===techLevelFilter));
+  if(!list.length){ el.innerHTML = `<p style="color:var(--text-muted); font-size:14px;">No technologies match these filters.</p>`; return; }
+  el.innerHTML = list.map((t,i)=>{
+    const brand = techBrand(t.name);
+    return `
+    <div class="card tech-card reveal-scale" style="${techColorStyle(brand)} transition-delay:${(i%12)*35}ms" data-tech="${esc(t.name)}" tabindex="0" role="button" aria-label="Open ${esc(t.name)} details">
+      <div class="tech-card-top">
+        <div class="tech-logo">${brand.svg}</div>
+        <span class="level-badge ${levelClass(t.level)}">${levelLabel(t.level)}</span>
+      </div>
+      <div class="tech-name">${esc(t.name)}</div>
+      <div class="tech-cat">${esc(t.cat)}</div>
+    </div>`;
+  }).join("");
+  el.querySelectorAll(".tech-card").forEach(card=>{
+    card.addEventListener("click", ()=>openTechModal(card.dataset.tech));
+    card.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openTechModal(card.dataset.tech); }});
+  });
+  observeReveals(el);
+  attachTilt(el);
+}
+
+function openTechModal(name){
+  const t = TECH.find(x=>x.name===name);
+  if(!t) return;
+  const brand = techBrand(t.name);
+  const phase = PHASES.find(p=>p.id===t.phase);
+  const status = getTechStatus(name);
+  const needText = {
+    essential:"Yes — essential. This is core to the recommended path.",
+    recommended:"Recommended once you're past the basics — not required to start.",
+    advanced:"Optional until you hit its specific use case — then it's worth learning.",
+    optional:"Optional. Nice to know about, not required for this roadmap."
+  }[t.level];
+  const el = document.getElementById("techModal");
+  el.innerHTML = `
+    <button class="modal-close" data-close>✕</button>
+    <div class="tech-logo tech-modal-logo" style="${techColorStyle(brand)}">${brand.svg}</div>
+    <h3>${esc(t.name)}</h3>
+    <div class="modal-sub">${esc(t.cat)} · <span class="level-badge ${levelClass(t.level)}">${levelLabel(t.level)}</span></div>
+    <div class="modal-block"><h5>WHY LEARN IT</h5><p style="font-size:14px;">${esc(t.why)}</p></div>
+    <div class="modal-block"><h5>DO I NEED THIS?</h5><p style="font-size:14px; color:var(--text-muted);">${needText}</p></div>
+    ${phase? `<div class="modal-block"><h5>RELATED ROADMAP PHASE</h5><p style="font-size:14px;">Phase ${String(phase.id).padStart(2,'0')} — ${esc(phase.title)}</p></div>`:""}
+    <div class="modal-block"><h5>OFFICIAL DOCS</h5><a class="modal-link" href="${t.url}" target="_blank" rel="noopener">${esc(t.url.replace('https://',''))} ↗</a></div>
+    <div class="modal-actions">
+      <button class="status-btn ${status==='not_started'?'active-ns':''}" data-status="not_started">Not started</button>
+      <button class="status-btn ${status==='learning'?'active-learning':''}" data-status="learning">Learning</button>
+      <button class="status-btn ${status==='completed'?'active-done':''}" data-status="completed">Completed</button>
+    </div>
+  `;
+  el.querySelectorAll("[data-status]").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{ setTechStatus(name, btn.dataset.status, e); openTechModal(name); });
+  });
+  el.querySelector("[data-close]").addEventListener("click", closeAllModals);
+  document.getElementById("techModalOverlay").classList.add("open");
+}
+
+function renderStackChain(){
+  const chain = ["Figma","UI / UX","HTML","CSS","JavaScript","TypeScript","React","Next.js","Tailwind CSS","APIs","Accessibility","Testing","Performance","Deployment"];
+  const pieces = chain.map((c,i)=>{
+    const brand = techBrand(c);
+    return `<span class="node" style="${techColorStyle(brand)}">${brand.svg}<span>${esc(c)}</span></span>${i<chain.length-1?'<span class="arrow">→</span>':''}`;
+  }).join("");
+  document.getElementById("stackChain").innerHTML = pieces + pieces;
+}
+
+/* ============================= RENDER: PROJECTS ============================= */
+function renderProjects(){
+  const el = document.getElementById("projectList");
+  el.innerHTML = PROJECTS.map((p,i)=>{
+    const status = getProjectStatus(p.id);
+    const dir = i % 2 === 0 ? "reveal-left" : "reveal-right";
+    return `
+    <div class="card project-row ${p.flagship?'flagship':''} ${dir}" style="transition-delay:${i*60}ms" data-project="${p.id}" tabindex="0" role="button" aria-label="Open project: ${esc(p.title)}">
+      <div class="project-num mono">0${p.id}</div>
+      <div>
+        <div class="project-title">${esc(p.title)} ${p.flagship?'<span class="flagship-tag">⭐ FLAGSHIP</span>':''}</div>
+        <div class="diff-tag" style="display:inline-block;">${esc(p.difficulty)}</div>
+        <div class="project-skills">${p.skills.slice(0,6).map(s=>`<span>${esc(s)}</span>`).join("")}</div>
+      </div>
+      <span class="status-check ${status==='completed'?'completed':(status==='learning'?'learning':'')}"></span>
+    </div>`;
+  }).join("");
+  el.querySelectorAll(".project-row").forEach(row=>{
+    row.addEventListener("click", ()=>openProjectModal(parseInt(row.dataset.project)));
+    row.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openProjectModal(parseInt(row.dataset.project)); }});
+  });
+  observeReveals(el);
+  attachTilt(el);
+}
+
+function openProjectModal(id){
+  const p = PROJECTS.find(x=>x.id===id);
+  if(!p) return;
+  const status = getProjectStatus(id);
+  const el = document.getElementById("projectModal");
+  el.innerHTML = `
+    <button class="modal-close" data-close>✕</button>
+    ${p.flagship? '<span class="flagship-tag">⭐ FLAGSHIP PORTFOLIO PROJECT</span>':''}
+    <h3 style="margin-top:10px;">${esc(p.title)}</h3>
+    <div class="modal-sub">${esc(p.difficulty)}</div>
+    <div class="modal-block"><h5>SKILLS APPLIED</h5><div class="modal-tags">${p.skills.map(s=>`<span>${esc(s)}</span>`).join("")}</div></div>
+    <div class="modal-block"><h5>CASE STUDY STEPS</h5><ul>${p.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ul></div>
+    <div class="modal-actions">
+      <button class="status-btn ${status==='not_started'?'active-ns':''}" data-status="not_started">Not started</button>
+      <button class="status-btn ${status==='learning'?'active-learning':''}" data-status="learning">In progress</button>
+      <button class="status-btn ${status==='completed'?'active-done':''}" data-status="completed">Shipped</button>
+    </div>
+  `;
+  el.querySelectorAll("[data-status]").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{ setProjectStatus(id, btn.dataset.status, e); openProjectModal(id); });
+  });
+  el.querySelector("[data-close]").addEventListener("click", closeAllModals);
+  document.getElementById("projectModalOverlay").classList.add("open");
+}
+
+/* ============================= RENDER: SKILLS & RESOURCES ============================= */
+function renderSkillsMatrix(){
+  const el = document.getElementById("skillsCats");
+  el.innerHTML = Object.entries(SKILLS_MATRIX).map(([cat,data],i)=>`
+    <div class="card skill-cat-card reveal-scale" style="transition-delay:${i*70}ms">
+      <h4><span class="dot" style="background:${data.color}"></span>${esc(cat)}</h4>
+      ${data.items.map(([s,lvl])=>`<div class="skill-row"><span>${esc(s)}</span><span class="skill-level">${esc(lvl)}</span></div>`).join("")}
+    </div>
+  `).join("");
+  observeReveals(el);
+  attachTilt(el);
+}
+function renderResources(){
+  const el = document.getElementById("resourcesGrid");
+  el.innerHTML = Object.entries(RESOURCE_CATS).map(([cat,data],i)=>`
+    <div class="card skill-cat-card reveal-scale" style="transition-delay:${i*70}ms">
+      <h4><span class="dot" style="background:${data.color}"></span>${esc(cat)}</h4>
+      ${data.items.map(([name,url])=>`<div class="skill-row"><a href="${url}" target="_blank" rel="noopener" style="color:var(--transit); font-weight:600;">${esc(name)} ↗</a></div>`).join("")}
+    </div>
+  `).join("");
+  observeReveals(el);
+  attachTilt(el);
+}
+
+/* ============================= RENDER: CAREER ============================= */
+function renderCareer(){
+  const grid = document.getElementById("careerGrid");
+  grid.innerHTML = CAREERS.map((c,i)=>`
+    <div class="card career-card reveal-scale" style="transition-delay:${i*60}ms"><h4>${esc(c.title)}</h4><p>${esc(c.focus)}</p></div>
+  `).join("");
+  observeReveals(grid);
+  attachTilt(grid);
+  const head = `<tr><th>Skill area</th>${CAREERS.map(c=>`<th>${esc(c.title)}</th>`).join("")}</tr>`;
+  const rows = COMPARE_ROWS.map(r=>`<tr><td>${esc(r[0])}</td>${r.slice(1).map(v=>`<td>${esc(v)}</td>`).join("")}</tr>`).join("");
+  document.getElementById("compareTable").innerHTML = `<thead>${head}</thead><tbody>${rows}</tbody>`;
+  document.getElementById("careerChain").innerHTML = CAREER_CHAIN.map((c,i)=>`<span class="node ${c==='Job'?'job':''}">${esc(c)}</span>${i<CAREER_CHAIN.length-1?'<span class="arrow">→</span>':''}`).join("");
+}
+
+/* ============================= RENDER: FAQ ============================= */
+function renderFAQ(){
+  const el = document.getElementById("faqList");
+  el.innerHTML = FAQS.map(([q,a],i)=>`
+    <div class="faq-item" data-i="${i}">
+      <button class="faq-q" aria-expanded="false">${esc(q)}<span class="plus">+</span></button>
+      <div class="faq-a"><p>${esc(a)}</p></div>
+    </div>
+  `).join("");
+  el.querySelectorAll(".faq-item").forEach(item=>{
+    item.querySelector(".faq-q").addEventListener("click", ()=>{
+      const open = item.classList.toggle("open");
+      item.querySelector(".faq-q").setAttribute("aria-expanded", open?"true":"false");
+    });
+  });
+}
+
+/* ============================= DASHBOARD ============================= */
+function renderDashboard(){
+  const total = PHASES.length;
+  const completed = PHASES.filter(p=>getPhaseStatus(p.id)==="completed").length;
+  const pct = Math.round((completed/total)*100);
+
+  document.getElementById("dashPct").textContent = pct+"%";
+  const ring = document.getElementById("dashRing");
+  const circumference = 2*Math.PI*44;
+  ring.style.strokeDasharray = circumference;
+  ring.style.strokeDashoffset = circumference - (circumference*pct/100);
+  document.getElementById("dashRingWrap").classList.toggle("pulse", pct===100);
+
+  const navRing = document.getElementById("navRingFill");
+  const navCirc = 2*Math.PI*15.5;
+  navRing.style.strokeDasharray = navCirc;
+  navRing.style.strokeDashoffset = navCirc - (navCirc*pct/100);
+  document.getElementById("navProgressLabel").textContent = pct+"% complete";
+  document.getElementById("footerProgress").textContent = pct+"% of the roadmap complete";
+
+  const currentPhase = PHASES.find(p=>getPhaseStatus(p.id)!=="completed") || PHASES[PHASES.length-1];
+  document.getElementById("dashCurrentPhase").textContent = String(currentPhase.id).padStart(2,'0')+" — "+currentPhase.title;
+  document.getElementById("dashCompletedCount").textContent = completed+" / "+total+" phases";
+  const nextPhase = PHASES.find(p=>p.id===currentPhase.id+1);
+  document.getElementById("dashNextPhase").textContent = nextPhase? (String(nextPhase.id).padStart(2,'0')+" — "+nextPhase.title) : "You've reached the end!";
+
+  const projCompleted = PROJECTS.filter(p=>getProjectStatus(p.id)==="completed").length;
+  document.getElementById("dashProjectsCount").textContent = projCompleted+" / "+PROJECTS.length;
+
+  const catBarsEl = document.getElementById("catBars");
+  catBarsEl.innerHTML = Object.entries(TRACKS).map(([key,t])=>{
+    const inTrack = PHASES.filter(p=>p.track===key);
+    const done = inTrack.filter(p=>getPhaseStatus(p.id)==="completed").length;
+    const p = inTrack.length? Math.round((done/inTrack.length)*100) : 0;
+    return `<div class="cat-bar-row">
+      <span class="label">${esc(t.label)}</span>
+      <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${p}%; background:${t.color}"></div></div>
+      <span class="val">${p}%</span>
+    </div>`;
+  }).join("");
+}
+
+/* time estimate */
+const TOTAL_ESTIMATED_HOURS = 480;
+function renderTimeEstimate(){
+  const hrs = getActiveBucket().hrsPerDay || 3;
+  document.querySelectorAll("#timeSelect button").forEach(b=>{
+    b.classList.toggle("active", parseInt(b.dataset.hrs)===hrs);
+  });
+  const days = Math.ceil(TOTAL_ESTIMATED_HOURS / hrs);
+  const months = (days/30).toFixed(1);
+  document.getElementById("timeResult").innerHTML = `At <b>${hrs} hour${hrs>1?'s':''}/day</b>: approximately <b>${months} months</b> to complete the full roadmap. This is an estimate — actual time depends on consistency and prior experience.`;
+}
+document.getElementById("timeSelect").addEventListener("click", e=>{
+  const btn = e.target.closest("button");
+  if(!btn) return;
+  const hrs = parseInt(btn.dataset.hrs);
+  getActiveBucket().hrsPerDay = hrs;
+  saveState();
+  renderTimeEstimate();
+  if(isServerSession()){
+    apiFetch("/progress/hours", { method:"PATCH", body:JSON.stringify({ hrsPerDay:hrs }) }).catch(err=>console.warn("Sync failed:", err.message));
+  }
+});
+
+/* ============================= MODALS: CLOSE ============================= */
+function closeAllModals(){
+  document.querySelectorAll(".modal-overlay").forEach(o=>o.classList.remove("open"));
+}
+document.querySelectorAll(".modal-overlay").forEach(overlay=>{
+  overlay.addEventListener("click", e=>{ if(e.target===overlay) closeAllModals(); });
+});
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeAllModals(); });
+
+/* ============================= SEARCH ============================= */
+const searchOverlay = document.getElementById("searchOverlay");
+const searchInput = document.getElementById("searchInput");
+document.getElementById("searchBtn").addEventListener("click", ()=>{
+  searchOverlay.classList.add("open");
+  searchInput.value = "";
+  renderSearchResults("");
+  setTimeout(()=>searchInput.focus(), 50);
+});
+document.getElementById("searchClose").addEventListener("click", closeAllModals);
+searchInput.addEventListener("input", ()=>renderSearchResults(searchInput.value));
+
+function buildSearchIndex(){
+  const idx = [];
+  PHASES.forEach(p=>idx.push({type:"Phase", label:`${String(p.id).padStart(2,'0')} — ${p.title}`, action:()=>{ closeAllModals(); openPhaseModal(p.id); }}));
+  TECH.forEach(t=>idx.push({type:"Tech", label:t.name, action:()=>{ closeAllModals(); openTechModal(t.name); }}));
+  PROJECTS.forEach(p=>idx.push({type:"Project", label:p.title, action:()=>{ closeAllModals(); openProjectModal(p.id); }}));
+  Object.entries(SKILLS_MATRIX).forEach(([cat,data])=>data.items.forEach(([s])=>idx.push({type:"Skill", label:s+" ("+cat+")", action:()=>{ closeAllModals(); document.getElementById("skills").scrollIntoView({behavior:"smooth"}); }})));
+  return idx;
+}
+const SEARCH_INDEX = buildSearchIndex();
+function renderSearchResults(q){
+  const el = document.getElementById("searchResults");
+  const query = q.trim().toLowerCase();
+  const results = query? SEARCH_INDEX.filter(r=>r.label.toLowerCase().includes(query)).slice(0,30) : SEARCH_INDEX.slice(0,10);
+  if(!results.length){ el.innerHTML = `<div class="search-empty">No results for "${esc(q)}".</div>`; return; }
+  el.innerHTML = results.map((r,i)=>`<div class="search-result" data-i="${i}"><span>${esc(r.label)}</span><span class="r-type">${esc(r.type)}</span></div>`).join("");
+  el.querySelectorAll(".search-result").forEach((node,i)=>{
+    node.addEventListener("click", ()=>results[i].action());
+  });
+}
+
+/* ============================= HERO: HEADLINE SPLIT + STATS COUNT-UP + PARALLAX ============================= */
+function initHeroHeadline(){
+  const h1 = document.getElementById("heroHeadline");
+  const text = "Learn. Design. Build. Ship.";
+  const words = text.split(" ");
+  h1.innerHTML = words.map((w,i)=>`<span class="word" style="animation-delay:${0.15 + i*0.09}s">${esc(w)}</span>`).join(" ");
+  if(REDUCED_MOTION){
+    h1.querySelectorAll(".word").forEach(w=>{ w.style.opacity=1; w.style.animation="none"; w.style.transform="none"; });
+  }
+}
+
+function countUp(el, target, suffix){
+  if(REDUCED_MOTION){ el.textContent = target+(suffix||""); return; }
+  const dur = 1100;
+  const start = performance.now();
+  function tick(now){
+    const p = Math.min(1, (now-start)/dur);
+    const eased = 1 - Math.pow(1-p, 3);
+    el.textContent = Math.round(target*eased) + (suffix||"");
+    if(p<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function initCountUps(){
+  const nodes = document.querySelectorAll("[data-count]");
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const el = entry.target;
+        countUp(el, parseInt(el.dataset.count,10), el.dataset.suffix||"");
+        obs.unobserve(el);
+      }
+    });
+  }, {threshold:0.4});
+  nodes.forEach(n=>obs.observe(n));
+  // hero skills stat (100+) is a static styled string, count it too
+  const skillsStat = document.getElementById("statSkills");
+  if(skillsStat){
+    if(REDUCED_MOTION){ skillsStat.textContent = "100+"; }
+    else{
+      const o2 = new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){ countUp(skillsStat, 100, "+"); o2.unobserve(entry.target); }
+        });
+      }, {threshold:0.4});
+      o2.observe(skillsStat);
+    }
+  }
+}
+
+function initHeroParallax(){
+  if(REDUCED_MOTION) return;
+  const hero = document.querySelector(".hero");
+  const spot = document.getElementById("heroSpotlight");
+  if(!hero || !spot) return;
+  let raf = 0, mx = "50%", my = "50%";
+  hero.addEventListener("mousemove", e=>{
+    const r = hero.getBoundingClientRect();
+    mx = ((e.clientX - r.left)/r.width*100).toFixed(1)+"%";
+    my = ((e.clientY - r.top)/r.height*100).toFixed(1)+"%";
+    if(!raf){
+      raf = requestAnimationFrame(()=>{
+        raf = 0;
+        spot.style.setProperty("--mx", mx);
+        spot.style.setProperty("--my", my);
+      });
+    }
+  }, {passive:true});
+}
+
+function initBackToTop(){
+  const btn = document.getElementById("backToTop");
+  if(!btn) return;
+  let shown = false;
+  function syncVisibility(){
+    const next = window.scrollY > 400;
+    if(next !== shown){
+      shown = next;
+      btn.classList.toggle("visible", next);
+    }
+  }
+  let scrollRaf = 0;
+  window.addEventListener("scroll", ()=>{
+    if(!scrollRaf){
+      scrollRaf = requestAnimationFrame(()=>{ scrollRaf = 0; syncVisibility(); });
+    }
+  }, {passive:true});
+  btn.addEventListener("click", ()=>{
+    if(!REDUCED_MOTION){
+      btn.classList.remove("launching");
+      void btn.offsetWidth;
+      btn.classList.add("launching");
+    }
+    window.scrollTo({ top:0, behavior: REDUCED_MOTION ? "auto" : "smooth" });
+  });
+  syncVisibility();
+}
+
+/* ============================= FULL RENDER ============================= */
+function renderAll(){
+  renderLegend();
+  renderRoadmap();
+  renderTechFilters();
+  renderTechGrid();
+  renderStackChain();
+  renderProjects();
+  renderSkillsMatrix();
+  renderResources();
+  renderCareer();
+  renderDashboard();
+  renderTimeEstimate();
+  renderAccountChip();
+}
+initHeroHeadline();
+renderFAQ();
+initAuthUI();
+observeReveals(document);
+renderAll();
+initCountUps();
+initHeroParallax();
+initBackToTop();
+requestAnimationFrame(updateRouteLineFill);
+renderBackendStatus();
+checkServerMode();
+
+})();
+</script>
+</body>
+</html>

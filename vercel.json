@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/cg.png", "destination": "/files/cg.png" },
+    { "source": "/favicon.ico", "destination": "/files/cg.png" },
+    { "source": "/favicon.png", "destination": "/files/cg.png" },
+    { "source": "/((?!api/).*)", "destination": "/files/uiux-developer-roadmap.html" }
+  ]
+}
